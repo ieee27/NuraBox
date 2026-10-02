@@ -5,8 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nura Box - Smart Care Smarter Life</title>
 <!-- Fonts & Chart.js -->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
 <style>
   /* Color Variables - Dark Theme (Default) */
@@ -44,7 +45,6 @@
     padding: 0; 
     box-sizing: border-box; 
     font-family: 'Tajawal', sans-serif; 
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
   }
 
   body { 
@@ -101,7 +101,7 @@
     position: fixed; inset: 0; z-index: 1000;
     display: flex; align-items: center; justify-content: center; padding: 20px;
     background: linear-gradient(rgba(15, 23, 42, 0.35), rgba(15, 23, 42, 0.45)), 
-                url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1600&q=85') center/cover no-repeat;
+                url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1200&q=70') center/cover no-repeat;
   }
 
   .auth-card {
@@ -211,6 +211,29 @@
   .nav-item { border: none; background: none; color: var(--text-secondary); font-size: 11px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; width: 25%; transition: color 0.2s, transform 0.2s; }
   .nav-item.active { color: var(--accent-blue); font-weight: 700; transform: translateY(-2px); }
   .nav-item svg { width: 22px; height: 22px; fill: currentColor; }
+
+  body,header,.custom-card,.kpi-card,.box-card,.form-control,.bottom-nav{transition:background-color .3s,color .3s,border-color .3s}
+  .nav-item{width:20%}
+  .kpi-card,.box-card{transition:transform .25s,box-shadow .25s,background-color .3s,border-color .3s}
+  .kpi-card:hover,.box-card:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,.25)}
+  .stagger>*{animation:fadeInUp .45s both}
+  .stagger>*:nth-child(2){animation-delay:.07s}.stagger>*:nth-child(3){animation-delay:.14s}
+  button:focus-visible,.form-control:focus-visible{outline:2px solid var(--accent-blue);outline-offset:2px}
+  .btn-action:active{transform:scale(.97)}
+  .btn-action:disabled{opacity:.5;cursor:not-allowed}
+  .toast-wrap{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:2000;display:flex;flex-direction:column;gap:8px;pointer-events:none;width:max-content;max-width:92vw}
+  .toast{background:var(--card-bg);border:1px solid var(--success);backdrop-filter:blur(12px);padding:10px 16px;border-radius:12px;font-size:13px;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.35);animation:fadeInUp .3s both}
+  .toast.err{border-color:var(--danger)}
+  .conn{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;border:1px solid var(--card-border);display:flex;align-items:center;gap:6px}
+  .conn i{width:8px;height:8px;border-radius:50%;background:var(--warning)}
+  .conn.on i{background:var(--success);animation:pulse 1.6s infinite}
+  .conn.off i{background:var(--danger)}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(16,185,129,.6)}100%{box-shadow:0 0 0 8px transparent}}
+  .rep-table{width:100%;border-collapse:collapse;font-size:13px}
+  .rep-table th,.rep-table td{padding:8px 6px;text-align:start;border-bottom:1px solid var(--card-border)}
+  .pill{padding:3px 10px;border-radius:20px;font-weight:700;font-size:11px}
+  .pill.t{background:rgba(16,185,129,.2);color:var(--success)}.pill.m{background:rgba(239,68,68,.2);color:var(--danger)}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
@@ -298,6 +321,7 @@
       </button>
     </div>
 
+    <div class="conn" id="conn"><i></i><span id="conn-txt">Local</span></div>
     <div class="user-badge">
       <span id="user-display">المستخدم</span>
       <button class="btn-logout" onclick="logout()" data-i18n="logout">خروج 🚪</button>
@@ -313,7 +337,7 @@
       👁️ <strong data-i18n="viewingPatient">أنت تشاهد الآن بيانات المريض:</strong> <span id="viewing-patient-name" style="color:var(--accent-blue);">--</span>
     </div>
 
-    <div class="kpi-grid">
+    <div class="kpi-grid stagger">
       <div class="kpi-card">
         <div class="kpi-header"><span data-i18n="rtcTime">توقيت RTC</span> ⏰</div>
         <div class="kpi-value" id="rtc-time">08:30</div>
@@ -328,7 +352,7 @@
       </div>
     </div>
 
-    <div class="boxes-grid">
+    <div class="boxes-grid stagger">
       <div class="box-card taken" id="box-1">
         <div class="box-top"><span data-i18n="box1">الخانة 01</span><span class="box-badge" data-i18n="taken">تم أخذها</span></div>
         <div class="medicine-name" id="med-name-1">بنادول Extra</div>
@@ -403,12 +427,35 @@
     </div>
   </div>
 
+  <!-- PAGE: REPORTS -->
+  <div class="page-tab" id="page-reports">
+    <div style="font-size:18px; font-weight:700; margin-bottom:15px;" data-i18n="reportsTitle">📋 التقارير</div>
+    <div class="custom-card">
+      <div class="kpi-grid" id="rep-kpis"></div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
+        <select id="rep-box" class="form-control" style="width:auto;"><option value="1">1</option><option value="2">2</option></select>
+        <button class="btn-action" style="width:auto; margin:0; padding:8px 14px;" onclick="logDose('taken')" data-i18n="logTaken">✔ تم أخذها</button>
+        <button class="btn-action" style="width:auto; margin:0; padding:8px 14px; background:var(--danger);" onclick="logDose('missed')" data-i18n="logMissed">✖ فائتة</button>
+        <button class="btn-action" style="width:auto; margin:0; padding:8px 14px;" onclick="exportCsv()">CSV ⬇</button>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="rep-table"><thead><tr><th data-i18n="colTime">الوقت</th><th data-i18n="colBox">الخانة</th><th data-i18n="colMed">الدواء</th><th data-i18n="colStatus">الحالة</th></tr></thead><tbody id="rep-body"></tbody></table>
+      </div>
+    </div>
+  </div>
+
   <!-- PAGE 4: SETTINGS -->
   <div class="page-tab" id="page-settings">
     <div style="font-size:18px; font-weight:700; margin-bottom:15px;" data-i18n="settingsTitle">⚙️ إعدادات الحساب والنظام</div>
     <div class="custom-card">
       <p style="margin-bottom:8px;"><strong data-i18n="currentUsername">اسم المستخدم الحالي:</strong> <span id="stg-username">--</span></p>
       <p><strong data-i18n="roleLabel">نوع الحساب:</strong> <span id="stg-role">--</span></p>
+    </div>
+    <div class="custom-card">
+      <h3 data-i18n="espTitle">ربط ESP32</h3>
+      <p style="font-size:12px; color:var(--text-secondary); margin:6px 0 12px;" data-i18n="espSub">اتركه فارغاً لو الصفحة شغالة من الـ ESP32 نفسه</p>
+      <div class="form-group"><input id="esp-url" class="form-control" dir="ltr" placeholder="http://192.168.1.50"></div>
+      <button class="btn-action" onclick="saveEsp()" data-i18n="saveBtn">حفظ واختبار</button>
     </div>
   </div>
 
@@ -424,6 +471,9 @@
   </button>
   <button class="nav-item" onclick="switchPage('network', this)">
     <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg> <span data-i18n="navNetwork">الربط الطبي</span>
+  </button>
+  <button class="nav-item" onclick="switchPage('reports', this)">
+    <svg viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg> <span data-i18n="navReports">التقارير</span>
   </button>
   <button class="nav-item" onclick="switchPage('settings', this)">
     <svg viewBox="0 0 24 24"><path d="M12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6-3.6z"/></svg> <span data-i18n="navSettings">الإعدادات</span>
@@ -476,6 +526,12 @@
       navSchedules: "المواعيد",
       navNetwork: "الربط الطبي",
       navSettings: "الإعدادات",
+      navReports: "التقارير", reportsTitle: "📋 التقارير", logTaken: "✔ تم أخذها", logMissed: "✖ فائتة",
+      colTime: "الوقت", colBox: "الخانة", colMed: "الدواء", colStatus: "الحالة", rTaken: "تم أخذها", rMissed: "فائتة",
+      rRate: "الالتزام", rTotal: "إجمالي", noReports: "لا توجد تقارير بعد", selectPatient: "اختر مريضاً أولاً",
+      espTitle: "ربط ESP32", espSub: "اتركه فارغاً لو الصفحة شغالة من الـ ESP32 نفسه", saveBtn: "حفظ واختبار",
+      limitReached: "وصلت للحد الأقصى: 10 حسابات", badUser: "اسم المستخدم: 3-20 حرف إنجليزي/أرقام/_ فقط",
+      connLocal: "محلي", connOn: "ESP32 متصل", connOff: "ESP32 غير متصل", mixed: "المتصفح يمنع HTTP من صفحة HTTPS - شغّل الصفحة من الـ ESP32",
       chartLabels: ['السبت', 'الأحد', 'الإثنين', 'الثلاثاء', 'الخميس', 'اليوم']
     },
     en: {
@@ -521,6 +577,12 @@
       navSchedules: "Schedule",
       navNetwork: "Network",
       navSettings: "Settings",
+      navReports: "Reports", reportsTitle: "📋 Reports", logTaken: "✔ Taken", logMissed: "✖ Missed",
+      colTime: "Time", colBox: "Box", colMed: "Medicine", colStatus: "Status", rTaken: "Taken", rMissed: "Missed",
+      rRate: "Adherence", rTotal: "Total", noReports: "No reports yet", selectPatient: "Select a patient first",
+      espTitle: "ESP32 Link", espSub: "Leave empty if this page is served by the ESP32 itself", saveBtn: "Save & Test",
+      limitReached: "Limit reached: 10 accounts max", badUser: "Username: 3-20 letters/digits/_ only",
+      connLocal: "Local", connOn: "ESP32 online", connOff: "ESP32 offline", mixed: "Browsers block HTTP from an HTTPS page - serve the page from the ESP32",
       chartLabels: ['Sat', 'Sun', 'Mon', 'Tue', 'Thu', 'Today']
     }
   };
@@ -544,6 +606,8 @@
     });
 
     updateChartLabels();
+    renderReports();
+    pullFromEsp.last = 0;
   }
 
   // Toggle Theme Function
@@ -562,8 +626,106 @@
   let currentUser = null;
   let activePatientData = null;
 
+  const MAX_USERS = 10, MAX_REPORTS = 200;
+  let reportsDb = JSON.parse(localStorage.getItem('pillbox_reports')) || [];
+  let espUrl = localStorage.getItem('nb_esp') || '';
+  const T = k => translations[currentLang][k] || k;
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const canSync = () => !!espUrl || location.protocol === 'http:';
+
+  function toast(msg, type) {
+    if (!type) type = /غير|بالفعل|مسبقاً|يرجى|Invalid|not found|already|Please|Limit/.test(msg) ? 'err' : 'ok';
+    let w = document.getElementById('toasts');
+    if (!w) { w = document.createElement('div'); w.id = 'toasts'; w.className = 'toast-wrap'; document.body.appendChild(w); }
+    const t = document.createElement('div'); t.className = 'toast ' + type; t.textContent = msg; w.appendChild(t);
+    setTimeout(() => { t.style.transition = 'opacity .3s'; t.style.opacity = 0; setTimeout(() => t.remove(), 300); }, 2600);
+  }
+
+  async function api(path, opts = {}) {
+    const c = new AbortController(), t = setTimeout(() => c.abort(), 4000);
+    try {
+      const r = await fetch(espUrl + path, { ...opts, signal: c.signal, headers: { 'Content-Type': 'application/json' } });
+      if (!r.ok) throw new Error(r.status);
+      return await r.json();
+    } finally { clearTimeout(t); }
+  }
+
+  function setConn(state) { // 'on' | 'off' | 'local'
+    const el = document.getElementById('conn');
+    el.className = 'conn ' + (state === 'local' ? '' : state);
+    document.getElementById('conn-txt').textContent = T(state === 'on' ? 'connOn' : state === 'off' ? 'connOff' : 'connLocal');
+  }
+
+  let syncTimer;
   function saveDb() {
     localStorage.setItem('pillbox_users', JSON.stringify(usersDb));
+    localStorage.setItem('pillbox_reports', JSON.stringify(reportsDb));
+    clearTimeout(syncTimer);
+    syncTimer = setTimeout(async () => {
+      if (!canSync()) return;
+      try { await api('/api/users', { method: 'POST', body: JSON.stringify(usersDb) }); setConn('on'); }
+      catch (e) { setConn('off'); }
+    }, 600);
+  }
+
+  async function pullFromEsp() {
+    if (!canSync()) return setConn('local');
+    try {
+      const [u, r] = await Promise.all([api('/api/users'), api('/api/reports')]);
+      if (Array.isArray(u) && u.length) usersDb = u.slice(0, MAX_USERS);
+      if (Array.isArray(r)) reportsDb = r.slice(-MAX_REPORTS);
+      localStorage.setItem('pillbox_users', JSON.stringify(usersDb));
+      localStorage.setItem('pillbox_reports', JSON.stringify(reportsDb));
+      if (currentUser) { // re-bind references after replacing arrays
+        currentUser = usersDb.find(x => x.username === currentUser.username) || currentUser;
+        if (activePatientData) activePatientData = usersDb.find(x => x.username === activePatientData.username) || activePatientData;
+        renderReports();
+      }
+      setConn('on');
+    } catch (e) { setConn('off'); }
+  }
+
+  function saveEsp() {
+    let v = document.getElementById('esp-url').value.trim().replace(/\/+$/, '');
+    if (v && !/^https?:\/\//.test(v)) v = 'http://' + v;
+    espUrl = v; localStorage.setItem('nb_esp', v);
+    if (location.protocol === 'https:' && v.startsWith('http:')) toast(T('mixed'), 'err');
+    pullFromEsp().then(() => toast(document.getElementById('conn-txt').textContent));
+  }
+
+  function logDose(status) {
+    const u = activePatientData;
+    if (!u) { toast(T('selectPatient'), 'err'); return; }
+    const box = document.getElementById('rep-box').value;
+    const entry = { t: Math.floor(Date.now() / 1000), user: u.username, box: +box, med: (u.meds[box] || {}).name || '', s: status };
+    reportsDb.push(entry);
+    if (reportsDb.length > MAX_REPORTS) reportsDb = reportsDb.slice(-MAX_REPORTS);
+    localStorage.setItem('pillbox_reports', JSON.stringify(reportsDb));
+    if (canSync()) api('/api/report', { method: 'POST', body: JSON.stringify(entry) }).then(() => setConn('on')).catch(() => setConn('off'));
+    renderReports();
+  }
+
+  function renderReports() {
+    const u = activePatientData, body = document.getElementById('rep-body'), kp = document.getElementById('rep-kpis');
+    if (!u) { body.innerHTML = ''; kp.innerHTML = ''; return; }
+    const rows = reportsDb.filter(r => r.user === u.username).sort((a, b) => b.t - a.t);
+    const taken = rows.filter(r => r.s === 'taken').length, missed = rows.length - taken;
+    const rate = rows.length ? Math.round(taken / rows.length * 100) + '%' : '—';
+    document.getElementById('kpi-rate').innerText = rate;
+    const k = (l, v) => `<div class="kpi-card"><div class="kpi-header">${l}</div><div class="kpi-value">${v}</div></div>`;
+    kp.innerHTML = k(T('rRate'), rate) + k(T('rTaken'), taken) + k(T('rMissed'), missed);
+    body.innerHTML = rows.length ? rows.slice(0, 50).map(r =>
+      `<tr><td>${new Date(r.t * 1000).toLocaleString(currentLang === 'ar' ? 'ar-EG' : 'en-GB', { dateStyle: 'short', timeStyle: 'short' })}</td><td>${esc(r.box)}</td><td>${esc(r.med)}</td><td><span class="pill ${r.s === 'taken' ? 't' : 'm'}">${T(r.s === 'taken' ? 'rTaken' : 'rMissed')}</span></td></tr>`
+    ).join('') : `<tr><td colspan="4" style="color:var(--text-secondary)">${T('noReports')}</td></tr>`;
+  }
+
+  function exportCsv() {
+    const u = activePatientData; if (!u) { toast(T('selectPatient'), 'err'); return; }
+    const rows = [['time', 'user', 'box', 'medicine', 'status'], ...reportsDb.filter(r => r.user === u.username).map(r => [new Date(r.t * 1000).toISOString(), r.user, r.box, r.med, r.s])];
+    const csv = '\ufeff' + rows.map(r => r.map(v => '"' + String(v).replace(/"/g, '""') + '"').join(',')).join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+    a.download = 'nura-report-' + u.username + '.csv'; a.click(); URL.revokeObjectURL(a.href);
   }
 
   function toggleAuthMode(mode) {
@@ -576,6 +738,8 @@
   function handleRegister(e) {
     e.preventDefault();
     const username = document.getElementById('reg-username').value.trim();
+    if (!/^[A-Za-z0-9_.-]{3,20}$/.test(username)) { toast(T('badUser'), 'err'); return; }
+    if (usersDb.length >= MAX_USERS) { toast(T('limitReached'), 'err'); return; }
     
     if (usersDb.find(u => u.username === username)) {
       alert(currentLang === 'ar' ? 'اسم المستخدم موجود بالفعل!' : 'Username already exists!');
@@ -676,7 +840,7 @@
       div.className = 'patient-card';
       div.innerHTML = `
         <div>
-          <strong>${doc ? doc.fullname : docUsername}</strong>
+          <strong>${esc(doc ? doc.fullname : docUsername)}</strong>
           <p style="font-size:11px; color:var(--text-secondary);">${currentLang === 'ar' ? 'يطلب صلاحيات متابعة وتعديل العلبة الذكية' : 'Requests access to monitor & update smart box'}</p>
         </div>
         <div style="display:flex; gap:6px;">
@@ -716,8 +880,8 @@
         div.className = 'patient-card';
         div.innerHTML = `
           <div>
-            <strong>${pat.fullname} (${currentLang === 'ar' ? 'العمر' : 'Age'}: ${pat.age})</strong>
-            <p style="font-size:11px; color:var(--text-secondary);">@${pat.username}</p>
+            <strong>${esc(pat.fullname)} (${currentLang === 'ar' ? 'العمر' : 'Age'}: ${pat.age})</strong>
+            <p style="font-size:11px; color:var(--text-secondary);">@${esc(pat.username)}</p>
           </div>
           <button onclick="inspectPatient('${pat.username}')" class="btn-action" style="padding:6px 12px; font-size:12px;">${currentLang === 'ar' ? 'عرض اللوحة وتعديل المواعيد' : 'View Dashboard & Edit'}</button>
         `;
@@ -736,6 +900,7 @@
   }
 
   function loadPatientMedsToUI() {
+    renderReports();
     if (!activePatientData || !activePatientData.meds) return;
     document.getElementById('med-name-1').innerText = activePatientData.meds[1].name;
     document.getElementById('med-name-2').innerText = activePatientData.meds[2].name;
@@ -761,11 +926,12 @@
     document.querySelectorAll('.page-tab').forEach(tab => tab.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
     document.getElementById('page-' + pageId).classList.add('active');
+    if (pageId === 'reports') renderReports();
     navBtn.classList.add('active');
   }
 
   setInterval(() => {
-    document.getElementById('rtc-time').innerText = new Date().toTimeString().substring(0, 5);
+    const n = new Date().toTimeString().substring(0, 5), el = document.getElementById('rtc-time'); if (el.innerText !== n) el.innerText = n;
   }, 1000);
 
   // Chart Initialization
@@ -778,6 +944,10 @@
     },
     options: { responsive: true, plugins: { legend: { display: false } } }
   });
+
+  document.getElementById('esp-url').value = espUrl;
+  pullFromEsp();
+  setInterval(() => { if (currentUser && canSync() && !document.hidden) pullFromEsp(); }, 10000);
 
   function updateChartLabels() {
     adherenceChart.data.labels = translations[currentLang].chartLabels;
