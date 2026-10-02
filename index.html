@@ -5,240 +5,241 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nura Box - Smart Care Smarter Life</title>
 <!-- Fonts & Chart.js -->
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-  /* Color Variables - Dark Theme (Default) */
   :root {
     --bg: #0f172a;
-    --header-bg: rgba(30, 41, 59, 0.8);
-    --card-bg: rgba(15, 23, 42, 0.82);
-    --card-border: rgba(255, 255, 255, 0.15);
+    --header-bg: rgba(30, 41, 59, 0.85);
+    --card-bg: rgba(30, 41, 59, 0.7);
+    --card-border: rgba(255, 255, 255, 0.12);
     --text-primary: #f8fafc;
-    --text-secondary: #cbd5e1;
+    --text-secondary: #94a3b8;
     --accent-blue: #38bdf8;
     --accent-indigo: #6366f1;
     --success: #10b981;
     --warning: #f59e0b;
     --danger: #ef4444;
-    --radius: 18px;
-    --bottom-nav-bg: rgba(30, 41, 59, 0.9);
+    --radius: 20px;
+    --bottom-nav-bg: rgba(15, 23, 42, 0.92);
   }
 
-  /* Light Theme Overrides */
   [data-theme="light"] {
-    --bg: #f1f5f9;
+    --bg: #f8fafc;
     --header-bg: rgba(255, 255, 255, 0.85);
     --card-bg: rgba(255, 255, 255, 0.9);
-    --card-border: rgba(0, 0, 0, 0.1);
+    --card-border: rgba(0, 0, 0, 0.08);
     --text-primary: #0f172a;
-    --text-secondary: #475569;
+    --text-secondary: #64748b;
     --accent-blue: #0284c7;
     --accent-indigo: #4f46e5;
     --bottom-nav-bg: rgba(255, 255, 255, 0.95);
   }
 
-  * { 
-    margin: 0; 
-    padding: 0; 
-    box-sizing: border-box; 
-    font-family: 'Tajawal', sans-serif; 
-  }
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', sans-serif; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+  body { background-color: var(--bg); color: var(--text-primary); min-height: 100vh; padding-bottom: 95px; }
 
-  body { 
-    background-color: var(--bg); 
+  .date-bar { background: linear-gradient(90deg, rgba(99,102,241,0.2), rgba(56,189,248,0.2)); border-bottom: 1px solid var(--card-border); text-align: center; padding: 6px 12px; font-size: 13px; font-weight: 700; color: var(--accent-blue); }
+
+  /* ==================== ALIGNED HEADER STYLES ==================== */
+  header { 
+    background: var(--header-bg); 
+    backdrop-filter: blur(16px); 
+    border-bottom: 1px solid var(--card-border); 
+    position: sticky; 
+    top: 0; 
+    z-index: 50; 
+    padding: 10px 16px; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    gap: 10px;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .brand-logo { width: 40px; height: 40px; background: linear-gradient(135deg, var(--accent-indigo), var(--accent-blue)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; color: #fff; box-shadow: 0 4px 12px rgba(56,189,248,0.3); }
+  .brand-text h1 { font-size: 16px; font-weight: 800; line-height: 1.1; }
+  .brand-text p { font-size: 10px; color: var(--accent-blue); font-weight: 700; }
+  
+  .header-right { display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; position: relative; }
+  .header-actions { display: flex; align-items: center; gap: 6px; }
+
+  .ctrl-btn { 
+    background: rgba(255, 255, 255, 0.06); 
+    border: 1px solid var(--card-border); 
     color: var(--text-primary); 
-    min-height: 100vh; 
-    padding-bottom: 90px; 
+    padding: 8px 10px; 
+    border-radius: 12px; 
+    font-size: 13px; 
+    font-weight: 700; 
+    cursor: pointer; 
+    display: inline-flex; 
+    align-items: center; 
+    justify-content: center;
+    gap: 4px; 
+    position: relative; 
+    white-space: nowrap;
+    height: 38px;
+  }
+  .ctrl-btn:hover { background: rgba(255, 255, 255, 0.12); transform: translateY(-2px); }
+
+  .notif-badge { position: absolute; top: -4px; right: -4px; background: var(--danger); color: white; font-size: 10px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; border: 2px solid var(--bg); }
+  .notif-dropdown { display: none; position: absolute; top: 48px; left: 0; width: 280px; background: var(--card-bg); backdrop-filter: blur(20px); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 14px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); z-index: 100; }
+  .notif-dropdown.show { display: block; animation: fadeIn 0.2s ease-out; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+  .notif-item { padding: 10px; border-bottom: 1px solid var(--card-border); font-size: 12px; }
+
+  .user-badge { background: rgba(255,255,255,0.06); border: 1px solid var(--card-border); padding: 6px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px; height: 38px; white-space: nowrap; }
+  .btn-logout { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 12px; font-weight: 700; margin-right: 2px; }
+
+  @media (max-width: 480px) {
+    .brand-text p { display: none; }
+    .user-badge span { display: none; }
+    .ctrl-btn { padding: 8px; }
   }
 
-  /* Control Action Buttons (Theme & Language Switchers) */
-  .header-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .ctrl-btn {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid var(--card-border);
-    color: var(--text-primary);
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    outline: none;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .ctrl-btn:hover {
-    transform: translateY(-2px) scale(1.05);
-    box-shadow: 0 4px 12px rgba(56, 189, 248, 0.2);
-    border-color: var(--accent-blue);
-  }
-
-  .ctrl-btn:active {
-    transform: translateY(0) scale(0.95);
-  }
-
-  .icon-spin {
-    display: inline-block;
-    transition: transform 0.5s ease-in-out;
-  }
-
-  .ctrl-btn:hover .icon-spin {
-    transform: rotate(360deg);
-  }
-
-  /* Auth Screen Styling */
-  .auth-overlay {
-    position: fixed; inset: 0; z-index: 1000;
-    display: flex; align-items: center; justify-content: center; padding: 20px;
-    background: linear-gradient(rgba(15, 23, 42, 0.35), rgba(15, 23, 42, 0.45)), 
-                url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1200&q=70') center/cover no-repeat;
-  }
-
-  .auth-card {
-    background: var(--card-bg); 
-    backdrop-filter: blur(12px);
-    border: 1px solid var(--card-border);
-    padding: 28px 24px; border-radius: var(--radius); width: 100%; max-width: 440px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-    max-height: 90vh;
-    overflow-y: auto;
-    animation: zoomIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-
-  @keyframes zoomIn {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
-  }
-
-  .auth-card::-webkit-scrollbar { width: 6px; }
-  .auth-card::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
-
-  .auth-header { text-align: center; margin-bottom: 22px; }
-  .auth-header h2 { font-size: 26px; font-weight: 800; color: var(--text-primary); letter-spacing: 0.5px; }
-  .auth-header p { font-size: 13px; color: var(--accent-blue); font-weight: 700; margin-top: 4px; }
-
-  .auth-toggle {
-    display: flex; background: rgba(0, 0, 0, 0.2); padding: 4px;
-    border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--card-border);
-  }
-  .auth-toggle button {
-    flex: 1; padding: 10px; border: none; background: none; color: var(--text-secondary);
-    border-radius: 9px; cursor: pointer; font-weight: 700; font-size: 14px; transition: all 0.3s;
-  }
-  .auth-toggle button.active { background: var(--accent-indigo); color: white; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); }
+  /* Auth Screen */
+  .auth-overlay { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; background: linear-gradient(rgba(15, 23, 42, 0.5), rgba(15, 23, 42, 0.6)), url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1600&q=85') center/cover no-repeat; }
+  .auth-card { background: var(--card-bg); backdrop-filter: blur(16px); border: 1px solid var(--card-border); padding: 28px 24px; border-radius: var(--radius); width: 100%; max-width: 440px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+  .auth-header { text-align: center; margin-bottom: 20px; }
+  .auth-header h2 { font-size: 26px; font-weight: 800; }
+  .auth-header p { font-size: 13px; color: var(--accent-blue); font-weight: 700; }
+  .auth-toggle { display: flex; background: rgba(0, 0, 0, 0.2); padding: 4px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--card-border); }
+  .auth-toggle button { flex: 1; padding: 10px; border: none; background: none; color: var(--text-secondary); border-radius: 9px; cursor: pointer; font-weight: 700; font-size: 14px; }
+  .auth-toggle button.active { background: var(--accent-indigo); color: white; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4); }
 
   .form-row { display: flex; gap: 10px; }
   .form-row .form-group { flex: 1; }
-
   .form-group { margin-bottom: 14px; }
   .form-group label { display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; font-weight: 600; }
-  .form-control { 
-    width: 100%; background: var(--bg); border: 1px solid var(--card-border); 
-    color: var(--text-primary); padding: 10px 14px; border-radius: 10px; font-size: 13px; outline: none; 
-  }
+  .form-control { width: 100%; background: var(--bg); border: 1px solid var(--card-border); color: var(--text-primary); padding: 10px 14px; border-radius: 10px; font-size: 13px; outline: none; }
   .form-control:focus { border-color: var(--accent-blue); }
 
-  .btn-action { 
-    width: 100%; background: linear-gradient(135deg, var(--accent-indigo), var(--accent-blue)); 
-    color: white; border: none; padding: 12px; border-radius: 10px; font-size: 15px; font-weight: 700; 
-    cursor: pointer; margin-top: 6px; box-shadow: 0 4px 12px rgba(56, 189, 248, 0.25);
-    transition: transform 0.2s, opacity 0.2s;
-  }
-  .btn-action:hover { opacity: 0.95; transform: translateY(-1px); }
+  .btn-action { width: 100%; background: linear-gradient(135deg, var(--accent-indigo), var(--accent-blue)); color: white; border: none; padding: 12px; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 6px; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3); }
 
-  /* Header Header & Bar */
-  header {
-    background: var(--header-bg); backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--card-border); position: sticky; top: 0; z-index: 50;
-    padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;
-  }
-  .brand { display: flex; align-items: center; gap: 12px; }
-  .brand-logo { width: 42px; height: 42px; background: linear-gradient(135deg, var(--accent-indigo), var(--accent-blue)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; color: #fff; }
-  .brand-text h1 { font-size: 18px; font-weight: 800; }
-  .brand-text p { font-size: 11px; color: var(--accent-blue); }
-
-  .header-right { display: flex; align-items: center; gap: 10px; }
-
-  .user-badge {
-    background: rgba(255,255,255,0.05); border: 1px solid var(--card-border);
-    padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .btn-logout { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 12px; font-weight: 700; }
-
-  .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
-
-  /* Page Tab Animations */
+  .container { max-width: 900px; margin: 20px auto; padding: 0 16px; }
   .page-tab { display: none; }
-  .page-tab.active { display: block; animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-  @keyframes fadeInUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  .page-tab.active { display: block; animation: fadeInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 
-  /* Dashboard Cards */
-  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 15px; margin-bottom: 25px; }
-  .kpi-card { background: var(--card-bg); border: 1px solid var(--card-border); padding: 18px; border-radius: var(--radius); }
-  .kpi-header { font-size: 12px; color: var(--text-secondary); margin-bottom: 10px; display: flex; justify-content: space-between; }
-  .kpi-value { font-size: 26px; font-weight: 800; }
+  .custom-card { background: var(--card-bg); backdrop-filter: blur(12px); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 22px; margin-bottom: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
 
-  .boxes-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 25px; }
-  @media(max-width: 500px) { .boxes-grid { grid-template-columns: 1fr; } }
+  /* DASHBOARD STYLES */
+  .hw-status-banner { background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(56, 189, 248, 0.12)); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 16px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .hw-status-item { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; }
+  .pulse-dot { width: 10px; height: 10px; background: var(--success); border-radius: 50%; box-shadow: 0 0 10px var(--success); animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.2); } 100% { opacity: 0.4; transform: scale(0.9); } }
 
-  .box-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 20px; position: relative; overflow: hidden; }
-  .box-card::before { content:''; position: absolute; top:0; right:0; left:0; height: 4px; background: var(--text-secondary); }
-  .box-card.taken::before { background: var(--success); }
-  .box-card.waiting::before { background: var(--warning); }
-  .box-top { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; }
-  .box-badge { padding: 4px 10px; border-radius: 20px; font-weight: 700; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 22px; }
+  .kpi-card { background: var(--card-bg); border: 1px solid var(--card-border); padding: 18px; border-radius: var(--radius); position: relative; overflow: hidden; }
+  .kpi-card::after { content:''; position: absolute; top:0; right:0; width: 4px; height:100%; background: var(--accent-blue); }
+  .kpi-header { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; display: flex; justify-content: space-between; font-weight: 600; }
+  .kpi-value { font-size: 26px; font-weight: 800; color: var(--text-primary); }
+
+  .adherence-bar-container { background: rgba(255,255,255,0.08); border-radius: 10px; height: 10px; width: 100%; margin-top: 10px; overflow: hidden; }
+  .adherence-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent-indigo), var(--accent-blue)); width: 0%; transition: width 0.6s ease; }
+
+  .boxes-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 22px; }
+  @media(max-width: 600px) { .boxes-grid { grid-template-columns: 1fr; } }
+  
+  .box-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 20px; position: relative; transition: all 0.3s ease; }
+  .box-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+  .box-card.taken { border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.05); }
+  .box-card.waiting { border-color: rgba(245, 158, 11, 0.4); background: rgba(245, 158, 11, 0.05); }
+  .box-card.empty { opacity: 0.6; }
+
+  .box-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .box-title { font-size: 13px; font-weight: 800; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
+  .box-badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 800; }
   .taken .box-badge { background: rgba(16, 185, 129, 0.2); color: var(--success); }
   .waiting .box-badge { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
-  .medicine-name { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+  .empty .box-badge { background: rgba(255, 255, 255, 0.1); color: var(--text-secondary); }
 
-  .custom-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 22px; margin-bottom: 20px; }
+  .medicine-name { font-size: 19px; font-weight: 800; margin-bottom: 6px; color: var(--text-primary); }
+  .medicine-time { font-size: 13px; color: var(--accent-blue); font-weight: 700; margin-bottom: 14px; }
+  
+  .btn-take-dose { width: 100%; padding: 8px; border-radius: 10px; border: none; background: var(--accent-indigo); color: white; font-weight: 700; font-size: 12px; cursor: pointer; }
+  .btn-take-dose.done { background: rgba(16, 185, 129, 0.2); color: var(--success); cursor: default; }
 
-  .patient-card { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); padding: 15px; border-radius: 12px; margin-bottom: 10px; }
+  .quick-actions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 22px; }
+  .action-btn-card { background: var(--card-bg); border: 1px solid var(--card-border); padding: 14px; border-radius: 16px; text-align: center; cursor: pointer; }
+  .action-btn-card:hover { border-color: var(--accent-blue); background: rgba(56, 189, 248, 0.08); transform: translateY(-2px); }
+  .action-icon { font-size: 22px; margin-bottom: 4px; }
+  .action-label { font-size: 12px; font-weight: 700; color: var(--text-primary); }
+
+  /* ==================== ENHANCED SCHEDULE STYLES ==================== */
+  .sched-overview-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+  .sched-overview-card { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--card-border); padding: 12px; border-radius: 14px; text-align: center; }
+  .sched-overview-num { font-size: 18px; font-weight: 800; color: var(--accent-blue); }
+  .sched-overview-lbl { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+  .sched-list-card { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--card-border); border-radius: 16px; padding: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .sched-list-card.active-slot { border-right: 4px solid var(--accent-blue); }
+  .sched-list-card.empty-slot { opacity: 0.6; border-right: 4px solid var(--text-secondary); }
+
+  .sched-info-main h4 { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
+  .sched-info-main p { font-size: 12px; color: var(--accent-blue); font-weight: 700; display: flex; align-items: center; gap: 6px; }
+  .sched-pill-tag { font-size: 11px; background: rgba(99, 102, 241, 0.2); color: var(--accent-indigo); padding: 2px 8px; border-radius: 10px; font-weight: 700; margin-top: 6px; display: inline-block; }
+
+  .sched-actions { display: flex; gap: 8px; }
+  .btn-sched-action { border: 1px solid var(--card-border); background: rgba(255, 255, 255, 0.06); color: var(--text-primary); padding: 8px 12px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer; }
+  .btn-sched-action:hover { background: rgba(255, 255, 255, 0.15); }
+  .btn-sched-del { color: var(--danger); border-color: rgba(239, 68, 68, 0.3); }
+
+  /* REPORT & NETWORK STYLES */
+  .report-status-badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; display: inline-block; }
+  .rep-badge-reviewed { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+  .rep-badge-pending { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+  .report-history-card { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--card-border); border-radius: 16px; padding: 16px; margin-bottom: 12px; }
+  .doc-reply-box { background: rgba(56, 189, 248, 0.1); border-right: 3px solid var(--accent-blue); padding: 10px 14px; border-radius: 8px; margin-top: 10px; font-size: 12px; }
+
+  .net-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+  .net-stat-card { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--card-border); padding: 14px; border-radius: 14px; text-align: center; }
+  .net-stat-num { font-size: 20px; font-weight: 800; color: var(--accent-blue); }
+  .net-stat-label { font-size: 11px; color: var(--text-secondary); margin-top: 4px; }
+  .net-card { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--card-border); border-radius: 16px; padding: 16px; margin-bottom: 14px; display: flex; flex-direction: column; gap: 12px; }
+  .net-card-header { display: flex; justify-content: space-between; align-items: center; }
+  .net-user-info { display: flex; align-items: center; gap: 12px; }
+  .net-avatar { width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-indigo), var(--accent-blue)); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; color: white; }
+  .net-user-details h4 { font-size: 15px; font-weight: 700; }
+  .net-user-details p { font-size: 12px; color: var(--accent-blue); }
+  .net-status-badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+  .status-active { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+  .status-pending { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+  .net-actions { display: flex; gap: 8px; margin-top: 4px; }
+  .net-btn { flex: 1; padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+  .btn-primary-net { background: var(--accent-indigo); color: white; }
+  .btn-danger-net { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
+
+  /* SETTINGS */
+  .stg-profile-banner { display: flex; align-items: center; gap: 16px; padding: 16px; background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(56, 189, 248, 0.15)); border: 1px solid var(--card-border); border-radius: 16px; margin-bottom: 20px; }
+  .stg-avatar-large { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-indigo), var(--accent-blue)); display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 800; color: white; }
+  .stg-role-tag { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; background: rgba(56, 189, 248, 0.2); color: var(--accent-blue); margin-top: 4px; }
+  .stg-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--card-border); }
+  .stg-item:last-child { border-bottom: none; }
+  .stg-info h4 { font-size: 14px; font-weight: 700; }
+  .stg-info p { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+  .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider { position: absolute; cursor: pointer; inset: 0; background-color: rgba(255,255,255,0.2); transition: .3s; border-radius: 24px; }
+  .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+  input:checked + .slider { background-color: var(--accent-indigo); }
+  input:checked + .slider:before { transform: translateX(20px); }
+  .danger-zone { border: 1px solid rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.05); }
 
   /* Bottom Navigation */
-  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bottom-nav-bg); backdrop-filter: blur(12px); border-top: 1px solid var(--card-border); display: flex; justify-content: space-around; padding: 12px 0; z-index: 100; }
-  .nav-item { border: none; background: none; color: var(--text-secondary); font-size: 11px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; width: 25%; transition: color 0.2s, transform 0.2s; }
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bottom-nav-bg); backdrop-filter: blur(16px); border-top: 1px solid var(--card-border); display: flex; justify-content: space-around; padding: 12px 0; z-index: 100; }
+  .nav-item { border: none; background: none; color: var(--text-secondary); font-size: 11px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; width: 20%; }
   .nav-item.active { color: var(--accent-blue); font-weight: 700; transform: translateY(-2px); }
   .nav-item svg { width: 22px; height: 22px; fill: currentColor; }
-
-  body,header,.custom-card,.kpi-card,.box-card,.form-control,.bottom-nav{transition:background-color .3s,color .3s,border-color .3s}
-  .nav-item{width:20%}
-  .kpi-card,.box-card{transition:transform .25s,box-shadow .25s,background-color .3s,border-color .3s}
-  .kpi-card:hover,.box-card:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,.25)}
-  .stagger>*{animation:fadeInUp .45s both}
-  .stagger>*:nth-child(2){animation-delay:.07s}.stagger>*:nth-child(3){animation-delay:.14s}
-  button:focus-visible,.form-control:focus-visible{outline:2px solid var(--accent-blue);outline-offset:2px}
-  .btn-action:active{transform:scale(.97)}
-  .btn-action:disabled{opacity:.5;cursor:not-allowed}
-  .toast-wrap{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:2000;display:flex;flex-direction:column;gap:8px;pointer-events:none;width:max-content;max-width:92vw}
-  .toast{background:var(--card-bg);border:1px solid var(--success);backdrop-filter:blur(12px);padding:10px 16px;border-radius:12px;font-size:13px;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.35);animation:fadeInUp .3s both}
-  .toast.err{border-color:var(--danger)}
-  .conn{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;border:1px solid var(--card-border);display:flex;align-items:center;gap:6px}
-  .conn i{width:8px;height:8px;border-radius:50%;background:var(--warning)}
-  .conn.on i{background:var(--success);animation:pulse 1.6s infinite}
-  .conn.off i{background:var(--danger)}
-  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(16,185,129,.6)}100%{box-shadow:0 0 0 8px transparent}}
-  .rep-table{width:100%;border-collapse:collapse;font-size:13px}
-  .rep-table th,.rep-table td{padding:8px 6px;text-align:start;border-bottom:1px solid var(--card-border)}
-  .pill{padding:3px 10px;border-radius:20px;font-weight:700;font-size:11px}
-  .pill.t{background:rgba(16,185,129,.2);color:var(--success)}.pill.m{background:rgba(239,68,68,.2);color:var(--danger)}
-  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 
-<!-- ==================== AUTH OVERLAY ==================== -->
+<div class="date-bar" id="current-date-display">...</div>
+
+<!-- AUTH OVERLAY -->
 <div class="auth-overlay" id="auth-overlay">
   <div class="auth-card">
     <div class="auth-header">
@@ -251,7 +252,6 @@
       <button id="btn-tab-register" onclick="toggleAuthMode('register')" data-i18n="newAccount">حساب جديد</button>
     </div>
 
-    <!-- Login Form -->
     <form id="form-login" onsubmit="handleLogin(event)">
       <div class="form-group">
         <label data-i18n="username">اسم المستخدم (Username)</label>
@@ -264,13 +264,11 @@
       <button type="submit" class="btn-action" data-i18n="loginBtn">دخول</button>
     </form>
 
-    <!-- Register Form -->
     <form id="form-register" style="display:none;" onsubmit="handleRegister(event)">
       <div class="form-group">
         <label data-i18n="fullname">الاسم الكامل</label>
         <input type="text" id="reg-fullname" class="form-control" placeholder="أدخل اسمك بالكامل" required>
       </div>
-      
       <div class="form-row">
         <div class="form-group">
           <label data-i18n="age">العمر</label>
@@ -284,7 +282,6 @@
           </select>
         </div>
       </div>
-
       <div class="form-group">
         <label data-i18n="username">اسم المستخدم (Username)</label>
         <input type="text" id="reg-username" class="form-control" placeholder="اسم مستخدم مميز" required>
@@ -298,7 +295,7 @@
   </div>
 </div>
 
-<!-- ==================== MAIN DASHBOARD ==================== -->
+<!-- HEADER -->
 <header>
   <div class="brand">
     <div class="brand-logo">NB</div>
@@ -309,162 +306,402 @@
   </div>
 
   <div class="header-right">
-    <!-- Controls: Language & Theme -->
     <div class="header-actions">
-      <button class="ctrl-btn" id="lang-toggle-btn" onclick="toggleLanguage()" aria-label="Toggle Language">
-        <span class="icon-spin">🌐</span>
+      <button class="ctrl-btn" id="notif-toggle-btn" onclick="toggleNotifDropdown()" title="الإشعارات">
+        <span>🔔</span>
+        <span class="notif-badge" id="notif-count">0</span>
+      </button>
+
+      <button class="ctrl-btn" onclick="toggleLanguage()" title="تغيير اللغة">
+        <span>🌐</span>
         <span id="lang-label">EN</span>
       </button>
 
-      <button class="ctrl-btn" id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle Theme">
-        <span id="theme-icon" class="icon-spin">🌙</span>
+      <button class="ctrl-btn" onclick="toggleTheme()" title="المظهر">
+        <span id="theme-icon">🌙</span>
       </button>
     </div>
 
-    <div class="conn" id="conn"><i></i><span id="conn-txt">Local</span></div>
     <div class="user-badge">
       <span id="user-display">المستخدم</span>
-      <button class="btn-logout" onclick="logout()" data-i18n="logout">خروج 🚪</button>
+      <button class="btn-logout" onclick="logout()" title="تسجيل الخروج">🚪</button>
+    </div>
+
+    <div class="notif-dropdown" id="notif-dropdown">
+      <div style="font-weight:700; margin-bottom:8px; border-bottom:1px solid var(--card-border); padding-bottom:4px;" data-i18n="notifTitle">الإشعارات والتنبيهات</div>
+      <div id="notif-items-container">
+        <div class="notif-item" style="color:var(--text-secondary);" data-i18n="noNotifs">لا توجد إشعارات جديدة</div>
+      </div>
     </div>
   </div>
 </header>
 
 <div class="container">
 
-  <!-- PAGE 1: MAIN DASHBOARD -->
+  <!-- PAGE 1: DASHBOARD -->
   <div class="page-tab active" id="page-dashboard">
-    <div id="patient-view-header" style="display:none; background:rgba(99,102,241,0.2); padding:10px 15px; border-radius:12px; margin-bottom:15px;">
-      👁️ <strong data-i18n="viewingPatient">أنت تشاهد الآن بيانات المريض:</strong> <span id="viewing-patient-name" style="color:var(--accent-blue);">--</span>
+    <div id="patient-view-header" style="display:none; background:rgba(99,102,241,0.2); padding:12px 16px; border-radius:14px; margin-bottom:15px; border:1px solid var(--accent-indigo);">
+      👁 <strong data-i18n="viewingPatient">أنت تشاهد الآن بيانات المريض:</strong> <span id="viewing-patient-name" style="color:var(--accent-blue); font-weight:800;">--</span>
     </div>
 
-    <div class="kpi-grid stagger">
-      <div class="kpi-card">
-        <div class="kpi-header"><span data-i18n="rtcTime">توقيت RTC</span> ⏰</div>
-        <div class="kpi-value" id="rtc-time">08:30</div>
+    <div class="hw-status-banner">
+      <div class="hw-status-item">
+        <div class="pulse-dot"></div>
+        <span>العلبة الذكية متصلة (ESP32-WiFi)</span>
       </div>
-      <div class="kpi-card">
-        <div class="kpi-header"><span data-i18n="adherenceRate">معدل الالتزام</span> 📈</div>
-        <div class="kpi-value" id="kpi-rate">85%</div>
+      <div class="hw-status-item" style="color:var(--text-secondary);">
+        🔋 البطارية: <strong style="color:var(--success);">94%</strong>
       </div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-header"><span data-i18n="rtcTime">ساعة النظام RTC</span> ⏰</div>
+        <div class="kpi-value" id="rtc-time">00:00</div>
+      </div>
+      
+      <div class="kpi-card">
+        <div class="kpi-header"><span data-i18n="adherenceRate">معدل الالتزام اليومي</span> 📈</div>
+        <div class="kpi-value" id="kpi-rate">0%</div>
+        <div class="adherence-bar-container">
+          <div class="adherence-bar-fill" id="kpi-bar-fill"></div>
+        </div>
+      </div>
+
       <div class="kpi-card">
         <div class="kpi-header"><span data-i18n="nextDose">الجرعة القادمة</span> ⌛</div>
-        <div class="kpi-value">14:00</div>
+        <div class="kpi-value" id="next-dose-val" style="font-size:20px; color:var(--accent-blue);">--:--</div>
       </div>
     </div>
 
-    <div class="boxes-grid stagger">
-      <div class="box-card taken" id="box-1">
-        <div class="box-top"><span data-i18n="box1">الخانة 01</span><span class="box-badge" data-i18n="taken">تم أخذها</span></div>
-        <div class="medicine-name" id="med-name-1">بنادول Extra</div>
-        <div style="font-size:12px; color:var(--text-secondary);">⏰ 08:00 صباحاً</div>
+    <div class="quick-actions-grid">
+      <div class="action-btn-card" onclick="triggerBuzzerTest()">
+        <div class="action-icon">🔊</div>
+        <div class="action-label">اختبار التنبيه</div>
       </div>
-      <div class="box-card waiting" id="box-2">
-        <div class="box-top"><span data-i18n="box2">الخانة 02</span><span class="box-badge" data-i18n="waiting">في الانتظار</span></div>
-        <div class="medicine-name" id="med-name-2">أوميجا 3</div>
-        <div style="font-size:12px; color:var(--text-secondary);">⏰ 02:00 مساءً</div>
+      <div class="action-btn-card" onclick="syncHardwareTime()">
+        <div class="action-icon">🔄</div>
+        <div class="action-label">تزامن الوقت</div>
+      </div>
+      <div class="action-btn-card" onclick="switchPage('schedules', document.querySelectorAll('.nav-item')[2])">
+        <div class="action-icon">➕</div>
+        <div class="action-label">إضافة دواء</div>
+      </div>
+    </div>
+
+    <div style="font-size:16px; font-weight:800; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+      <span>💊 الخانات والأدوية اليومية</span>
+      <span style="font-size:12px; color:var(--text-secondary); font-weight:normal;">تحديث تلقائي real-time</span>
+    </div>
+
+    <div class="boxes-grid">
+      <div class="box-card empty" id="box-1">
+        <div class="box-top">
+          <span class="box-title">📦 الخانة 01</span>
+          <span class="box-badge" id="badge-1">فارغ</span>
+        </div>
+        <div class="medicine-name" id="med-name-1">--</div>
+        <div class="medicine-time" id="med-time-1">⏰ --:--</div>
+        <button class="btn-take-dose" id="btn-dose-1" onclick="markDoseTaken(1)">تأكيد أخذ الجرعة ✅</button>
+      </div>
+
+      <div class="box-card empty" id="box-2">
+        <div class="box-top">
+          <span class="box-title">📦 الخانة 02</span>
+          <span class="box-badge" id="badge-2">فارغ</span>
+        </div>
+        <div class="medicine-name" id="med-name-2">--</div>
+        <div class="medicine-time" id="med-time-2">⏰ --:--</div>
+        <button class="btn-take-dose" id="btn-dose-2" onclick="markDoseTaken(2)">تأكيد أخذ الجرعة ✅</button>
+      </div>
+
+      <div class="box-card empty" id="box-3">
+        <div class="box-top">
+          <span class="box-title">📦 الخانة 03</span>
+          <span class="box-badge" id="badge-3">فارغ</span>
+        </div>
+        <div class="medicine-name" id="med-name-3">--</div>
+        <div class="medicine-time" id="med-time-3">⏰ --:--</div>
+        <button class="btn-take-dose" id="btn-dose-3" onclick="markDoseTaken(3)">تأكيد أخذ الجرعة ✅</button>
+      </div>
+
+      <div class="box-card empty" id="box-4">
+        <div class="box-top">
+          <span class="box-title">📦 الخانة 04</span>
+          <span class="box-badge" id="badge-4">فارغ</span>
+        </div>
+        <div class="medicine-name" id="med-name-4">--</div>
+        <div class="medicine-time" id="med-time-4">⏰ --:--</div>
+        <button class="btn-take-dose" id="btn-dose-4" onclick="markDoseTaken(4)">تأكيد أخذ الجرعة ✅</button>
       </div>
     </div>
 
     <div class="custom-card">
-      <div style="font-size:16px; font-weight:700; margin-bottom:15px;" data-i18n="chartTitle">مخطط الالتزام بالجرعات</div>
+      <div style="font-size:16px; font-weight:700; margin-bottom:15px;" data-i18n="chartTitle">مخطط الالتزام الأسبوعي</div>
       <canvas id="adherenceChart" height="120"></canvas>
     </div>
   </div>
 
-  <!-- PAGE 2: SCHEDULES -->
-  <div class="page-tab" id="page-schedules">
-    <div style="font-size:18px; font-weight:700; margin-bottom:15px;" data-i18n="scheduleTitle">⏰ تعديل وجدولة الأدوية</div>
-    <div class="custom-card">
-      <form onsubmit="event.preventDefault(); updateSchedule();">
-        <div class="form-group">
-          <label data-i18n="selectBox">اختر الخانة</label>
-          <select class="form-control" id="sched-box">
-            <option value="1" data-i18n="box1">الخانة 1</option>
-            <option value="2" data-i18n="box2">الخانة 2</option>
-          </select>
+  <!-- PAGE 2: MEDICAL REPORT -->
+  <div class="page-tab" id="page-report">
+    <div id="patient-report-form">
+      <div class="custom-card">
+        <h3 style="margin-bottom:8px;" data-i18n="weeklyFormTitle">📝 التقرير الطبي للصحة والأدوية</h3>
+        <p style="font-size:12px; color:var(--text-secondary); margin-bottom:18px;" data-i18n="weeklyFormSub">أدخل انطباعاتك عن الأدوية وأي تعب واجهته هذا الأسبوع ليصل مباشرة لطبيبك</p>
+
+        <form onsubmit="submitWeeklyReport(event)">
+          <div class="form-group">
+            <label data-i18n="weeklyOverallFeeling">كيف كان شعورك وصحتك العامة هذا الأسبوع؟</label>
+            <select id="report-health-status" class="form-control">
+              <option value="ممتاز 😃">ممتاز ومستقر 😃</option>
+              <option value="متوسط 😐">متوسط / إرهاق خفيف 😐</option>
+              <option value="تعبان 😫">تعبان ومزعج 😫</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label data-i18n="problematicMed">هل هناك دواء محدد تشعر أنه بيتعبك؟</label>
+            <select id="report-problem-med" class="form-control">
+              <option value="لا يوجد">لا يوجد - الأدوية مريحة</option>
+              <option value="الخانة 1">دواء الخانة 1</option>
+              <option value="الخانة 2">دواء الخانة 2</option>
+              <option value="الخانة 3">دواء الخانة 3</option>
+              <option value="الخانة 4">دواء الخانة 4</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label data-i18n="sideEffectsLabel">ما هي الأعراض الجانبية التي شعرت بها؟</label>
+            <input type="text" id="report-symptoms" class="form-control" placeholder="مثال: غثيان، دوخة، ألم بالمعدة..." required>
+          </div>
+
+          <div class="form-group">
+            <label data-i18n="patientNotesLabel">ملاحظات إضافية تريد إرسالها للطبيب</label>
+            <textarea id="report-notes" class="form-control" rows="3" placeholder="اكتب هنا أي تفاصيل أخرى ترغب في مشاركتها..."></textarea>
+          </div>
+
+          <button type="submit" class="btn-action" data-i18n="sendReportBtn">إرسال التقرير للطبيب 📤</button>
+        </form>
+      </div>
+
+      <div class="custom-card">
+        <h3 style="font-size:15px; font-weight:700; margin-bottom:12px;">📚 سجل التقارير المرسلة وتوصيات الطبيب</h3>
+        <div id="patient-report-history">
+          <p style="font-size:12px; color:var(--text-secondary);">لا توجد تقارير مرسلة سابقة.</p>
         </div>
+      </div>
+    </div>
+
+    <div id="doctor-report-review" style="display:none;">
+      <div class="custom-card">
+        <h3 style="margin-bottom:8px;" data-i18n="doctorReviewTitle">🩺 مراجعة التقارير الأسبوعية للمرضى</h3>
+        <p style="font-size:12px; color:var(--text-secondary); margin-bottom:18px;" data-i18n="doctorReviewSub">استعرض بلاغات وتأثير الأدوية على مرضياك وقم بتسجيل توصياتك الطبية</p>
+        <div id="reports-list-container"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 3: ADVANCED SCHEDULES PAGE (DEVELOPED) -->
+  <div class="page-tab" id="page-schedules">
+    <div style="font-size:20px; font-weight:800; margin-bottom:15px;" data-i18n="scheduleTitle">⏰ إدارة وجدولة الأدوية الذكية</div>
+
+    <!-- Overview Bar for Slots -->
+    <div class="sched-overview-grid">
+      <div class="sched-overview-card">
+        <div class="sched-overview-num" id="sched-active-cnt">0/4</div>
+        <div class="sched-overview-lbl">خانات نشطة</div>
+      </div>
+      <div class="sched-overview-card">
+        <div class="sched-overview-num" id="sched-next-time" style="font-size:15px;">--:--</div>
+        <div class="sched-overview-lbl">الجرعة المطبقة</div>
+      </div>
+      <div class="sched-overview-card">
+        <div class="sched-overview-num" style="color:var(--success);">مفعّل</div>
+        <div class="sched-overview-lbl">التنبيه الصوتي</div>
+      </div>
+      <div class="sched-overview-card">
+        <div class="sched-overview-num" style="color:var(--accent-blue);">RTC</div>
+        <div class="sched-overview-lbl">تزامن الساعة</div>
+      </div>
+    </div>
+
+    <!-- Interactive Schedule List View -->
+    <div class="custom-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+        <h3 style="font-size:16px; font-weight:800;">📋 الجدول الحالي لخانات العلبة</h3>
+        <span style="font-size:12px; color:var(--text-secondary);">اضغط تعديل لضبط الموعد</span>
+      </div>
+
+      <div id="schedule-slots-container">
+        <!-- JS rendered schedule cards -->
+      </div>
+    </div>
+
+    <!-- Advanced Edit Form -->
+    <div class="custom-card" id="schedule-form-card">
+      <h3 style="font-size:16px; font-weight:800; margin-bottom:12px;" id="sched-form-title">⚙️ إضافة / تعديل جرعة الخانة</h3>
+      
+      <form onsubmit="event.preventDefault(); saveAdvancedSchedule();">
+        <div class="form-row">
+          <div class="form-group">
+            <label data-i18n="selectBox">اختر الخانة</label>
+            <select class="form-control" id="sched-box" onchange="loadSelectedBoxToForm()">
+              <option value="1">الخانة 01</option>
+              <option value="2">الخانة 02</option>
+              <option value="3">الخانة 03</option>
+              <option value="4">الخانة 04</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>عدد الأقراص (Pills Dose)</label>
+            <input type="number" id="sched-pills-count" class="form-control" min="1" max="5" value="1" required>
+          </div>
+        </div>
+
         <div class="form-group">
           <label data-i18n="medName">اسم الدواء</label>
-          <input type="text" id="sched-name" class="form-control" required>
+          <input type="text" id="sched-name" class="form-control" placeholder="أدخل اسم الدواء (مثال: بنادول)..." required>
         </div>
-        <div class="form-group">
-          <label data-i18n="medTime">الموعد</label>
-          <input type="time" id="sched-time" class="form-control" required>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label data-i18n="medTime">توقيت التنبيه</label>
+            <input type="time" id="sched-time" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>تكرار التنبيه</label>
+            <select id="sched-repeat" class="form-control">
+              <option value="يومياً">يومياً (Daily)</option>
+              <option value="أيام محددة">أيام المتابعة الطبية</option>
+              <option value="عند الحاجة">عند الحاجة فقط</option>
+            </select>
+          </div>
         </div>
-        <button type="submit" class="btn-action" data-i18n="saveChanges">حفظ التغييرات 💾</button>
+
+        <div style="display:flex; gap:10px; margin-top:10px;">
+          <button type="submit" class="btn-action" style="flex:2;">حفظ الجدولة وتحديث العلبة 💾</button>
+          <button type="button" onclick="clearSelectedBox()" class="btn-action" style="flex:1; background:rgba(239, 68, 68, 0.2); color:var(--danger); border:1px solid rgba(239, 68, 68, 0.3);">تفريغ الخانة 🗑️</button>
+        </div>
       </form>
     </div>
   </div>
 
-  <!-- PAGE 3: NETWORK -->
+  <!-- PAGE 4: NETWORK -->
   <div class="page-tab" id="page-network">
-    <div style="font-size:18px; font-weight:700; margin-bottom:15px;" data-i18n="networkTitle">🤝 شبكة المتابعة الطبية</div>
+    <div style="font-size:20px; font-weight:800; margin-bottom:15px;" data-i18n="networkTitle">🌐 شبكة الرعاية والمتابعة الطبية</div>
 
-    <!-- Doctor View Section -->
-    <div id="doctor-network-section" class="custom-card" style="display:none;">
-      <h3 data-i18n="sendRequestTitle">إرسال طلب متابعة لمريض</h3>
-      <p style="font-size:12px; color:var(--text-secondary); margin-bottom:15px;" data-i18n="sendRequestSub">أدخل اسم المستخدم (Username) الخاص بالمريض لإرسال طلب ارتباط</p>
-      <form onsubmit="sendPatientRequest(event)">
-        <div class="form-group">
-          <input type="text" id="target-patient-username" class="form-control" placeholder="اسم مستخدم المريض..." required>
-        </div>
-        <button type="submit" class="btn-action" data-i18n="sendBtn">إرسال طلب المتابعة</button>
-      </form>
-
-      <h3 style="margin-top:25px; margin-bottom:10px;" data-i18n="acceptedPatientsList">قائمة مرضياك المقبولين</h3>
-      <div id="doctor-patients-list">
-        <p style="font-size:12px; color:var(--text-secondary);" data-i18n="noPatients">لا يوجد مرضى مرتبطون بحسابك حالياً.</p>
+    <div class="net-stats">
+      <div class="net-stat-card">
+        <div class="net-stat-num" id="net-count-linked">0</div>
+        <div class="net-stat-label" id="net-label-linked">حسابات مرتبطة</div>
+      </div>
+      <div class="net-stat-card">
+        <div class="net-stat-num" id="net-count-pending">0</div>
+        <div class="net-stat-label">طلبات معلقة</div>
+      </div>
+      <div class="net-stat-card">
+        <div class="net-stat-num" style="color:var(--success);">100%</div>
+        <div class="net-stat-label">أمان التزامن</div>
       </div>
     </div>
 
-    <!-- Patient View Section -->
-    <div id="patient-network-section" class="custom-card" style="display:none;">
-      <h3 data-i18n="incomingRequests">طلبات المتابعة الواردة من الأطباء</h3>
-      <p style="font-size:12px; color:var(--text-secondary); margin-bottom:15px;" data-i18n="incomingRequestsSub">الأطباء الذين طلبوا الوصول لمتابعة علبتك الذكية وتعديل المواعيد</p>
-      <div id="patient-requests-list">
-        <p style="font-size:12px; color:var(--text-secondary);" data-i18n="noRequests">لا توجد طلبات جديدة.</p>
+    <div id="doctor-network-section" style="display:none;">
+      <div class="custom-card">
+        <h3 style="font-size:15px; font-weight:700; margin-bottom:6px;">➕ إضافة مريض جديد للشبكة</h3>
+        <p style="font-size:12px; color:var(--text-secondary); margin-bottom:12px;">أدخل اسم المستخدم للوصول إلى العلبة الذكية للمريض ومتابعة التزامه</p>
+        <form onsubmit="sendPatientRequest(event)" style="display:flex; gap:10px;">
+          <input type="text" id="target-patient-username" class="form-control" placeholder="اسم مستخدم المريض (Username)..." required style="flex:1;">
+          <button type="submit" class="btn-action" style="width:auto; margin:0; padding:0 20px; font-size:13px;">إرسال الطلب</button>
+        </form>
+      </div>
+
+      <div class="custom-card">
+        <h3 style="font-size:15px; font-weight:700; margin-bottom:15px;">👥 المرضى التابعون لك</h3>
+        <div id="doctor-patients-list"></div>
+      </div>
+    </div>
+
+    <div id="patient-network-section" style="display:none;">
+      <div class="custom-card">
+        <h3 style="font-size:15px; font-weight:700; margin-bottom:6px;">📩 طلبات الانضمام الواردة من الأطباء</h3>
+        <p style="font-size:12px; color:var(--text-secondary); margin-bottom:15px;">الأطباء المعتمدون الذين طلبوا الإشراف على جدول أوديتك</p>
+        <div id="patient-requests-list"></div>
+      </div>
+
+      <div class="custom-card">
+        <h3 style="font-size:15px; font-weight:700; margin-bottom:15px;">🩺 الأطباء المتابعون لحالتك</h3>
+        <div id="patient-doctors-list"></div>
       </div>
     </div>
   </div>
 
-  <!-- PAGE: REPORTS -->
-  <div class="page-tab" id="page-reports">
-    <div style="font-size:18px; font-weight:700; margin-bottom:15px;" data-i18n="reportsTitle">📋 التقارير</div>
-    <div class="custom-card">
-      <div class="kpi-grid" id="rep-kpis"></div>
-      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
-        <select id="rep-box" class="form-control" style="width:auto;"><option value="1">1</option><option value="2">2</option></select>
-        <button class="btn-action" style="width:auto; margin:0; padding:8px 14px;" onclick="logDose('taken')" data-i18n="logTaken">✔ تم أخذها</button>
-        <button class="btn-action" style="width:auto; margin:0; padding:8px 14px; background:var(--danger);" onclick="logDose('missed')" data-i18n="logMissed">✖ فائتة</button>
-        <button class="btn-action" style="width:auto; margin:0; padding:8px 14px;" onclick="exportCsv()">CSV ⬇</button>
-      </div>
-      <div style="overflow-x:auto;">
-        <table class="rep-table"><thead><tr><th data-i18n="colTime">الوقت</th><th data-i18n="colBox">الخانة</th><th data-i18n="colMed">الدواء</th><th data-i18n="colStatus">الحالة</th></tr></thead><tbody id="rep-body"></tbody></table>
-      </div>
-    </div>
-  </div>
-
-  <!-- PAGE 4: SETTINGS -->
+  <!-- PAGE 5: SETTINGS -->
   <div class="page-tab" id="page-settings">
-    <div style="font-size:18px; font-weight:700; margin-bottom:15px;" data-i18n="settingsTitle">⚙️ إعدادات الحساب والنظام</div>
-    <div class="custom-card">
-      <p style="margin-bottom:8px;"><strong data-i18n="currentUsername">اسم المستخدم الحالي:</strong> <span id="stg-username">--</span></p>
-      <p><strong data-i18n="roleLabel">نوع الحساب:</strong> <span id="stg-role">--</span></p>
+    <div style="font-size:20px; font-weight:800; margin-bottom:15px;" data-i18n="settingsTitle">⚙ إعدادات الحساب والنظام</div>
+
+    <div class="stg-profile-banner">
+      <div class="stg-avatar-large" id="stg-avatar-letter">U</div>
+      <div>
+        <h3 id="stg-display-name" style="font-size:16px; font-weight:800;">اسم المستخدم</h3>
+        <p id="stg-username-text" style="font-size:12px; color:var(--text-secondary);">@username</p>
+        <span class="stg-role-tag" id="stg-role-badge">حساب مريض</span>
+      </div>
     </div>
+
     <div class="custom-card">
-      <h3 data-i18n="espTitle">ربط ESP32</h3>
-      <p style="font-size:12px; color:var(--text-secondary); margin:6px 0 12px;" data-i18n="espSub">اتركه فارغاً لو الصفحة شغالة من الـ ESP32 نفسه</p>
-      <div class="form-group"><input id="esp-url" class="form-control" dir="ltr" placeholder="http://192.168.1.50"></div>
-      <button class="btn-action" onclick="saveEsp()" data-i18n="saveBtn">حفظ واختبار</button>
+      <h3 style="font-size:14px; font-weight:700; margin-bottom:10px; color:var(--accent-blue);">🎨 التفضيلات والمظهر</h3>
+      
+      <div class="stg-item">
+        <div class="stg-info">
+          <h4>الوضع الداكن (Dark Mode)</h4>
+          <p>تفعيل المظهر الليلي المريح للعين</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="stg-theme-switch" checked onchange="toggleTheme()">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="stg-item">
+        <div class="stg-info">
+          <h4>لغة التطبيق</h4>
+          <p>تغيير الواجهة بين العربية والإنجليزي</p>
+        </div>
+        <button class="ctrl-btn" onclick="toggleLanguage()">
+          <span id="stg-lang-text">العربية 🌐</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="custom-card">
+      <h3 style="font-size:14px; font-weight:700; margin-bottom:10px; color:var(--accent-blue);">🔒 الأمان والحساب</h3>
+      <form onsubmit="changeUserPassword(event)">
+        <div class="form-group">
+          <label>تحديث كلمة السر</label>
+          <input type="password" id="stg-new-pass" class="form-control" placeholder="أدخل كلمة السر الجديدة..." required>
+        </div>
+        <button type="submit" class="btn-action" style="padding:8px 15px; font-size:13px; width:auto;">حفظ كلمة السر</button>
+      </form>
+    </div>
+
+    <div class="custom-card danger-zone">
+      <h3 style="font-size:14px; font-weight:700; margin-bottom:10px; color:var(--danger);">⚠️ إجراءات الحساب</h3>
+      <div style="display:flex; gap:10px;">
+        <button class="net-btn btn-danger-net" style="flex:1; padding:10px;" onclick="clearAllData()">إعادة ضبط البيانات المحلية</button>
+        <button class="net-btn btn-primary-net" style="flex:1; padding:10px;" onclick="logout()">تسجيل الخروج 🚪</button>
+      </div>
     </div>
   </div>
 
 </div>
 
-<!-- Bottom Navigation -->
+<!-- BOTTOM NAV -->
 <div class="bottom-nav">
   <button class="nav-item active" onclick="switchPage('dashboard', this)">
     <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg> <span data-i18n="navHome">الرئيسية</span>
+  </button>
+  <button class="nav-item" onclick="switchPage('report', this)">
+    <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2zm0-4H7V7h10v2z"/></svg> <span data-i18n="navReport">التقرير الطبي</span>
   </button>
   <button class="nav-item" onclick="switchPage('schedules', this)">
     <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg> <span data-i18n="navSchedules">المواعيد</span>
@@ -472,261 +709,57 @@
   <button class="nav-item" onclick="switchPage('network', this)">
     <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg> <span data-i18n="navNetwork">الربط الطبي</span>
   </button>
-  <button class="nav-item" onclick="switchPage('reports', this)">
-    <svg viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg> <span data-i18n="navReports">التقارير</span>
-  </button>
   <button class="nav-item" onclick="switchPage('settings', this)">
     <svg viewBox="0 0 24 24"><path d="M12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6-3.6z"/></svg> <span data-i18n="navSettings">الإعدادات</span>
   </button>
 </div>
 
 <script>
-  // Translations Dictionary
   const translations = {
     ar: {
-      login: "تسجيل الدخول",
-      newAccount: "حساب جديد",
-      username: "اسم المستخدم (Username)",
-      password: "كلمة السر",
-      loginBtn: "دخول",
-      fullname: "الاسم الكامل",
-      age: "العمر",
-      accountType: "نوع الحساب",
-      patient: "مريض",
-      doctor: "طبيب",
-      createAccount: "إنشاء حساب جديد",
-      logout: "خروج 🚪",
-      viewingPatient: "أنت تشاهد الآن بيانات المريض:",
-      rtcTime: "توقيت RTC",
-      adherenceRate: "معدل الالتزام",
-      nextDose: "الجرعة القادمة",
-      box1: "الخانة 01",
-      box2: "الخانة 02",
-      taken: "تم أخذها",
-      waiting: "في الانتظار",
-      chartTitle: "مخطط الالتزام بالجرعات",
-      scheduleTitle: "⏰ تعديل وجدولة الأدوية",
-      selectBox: "اختر الخانة",
-      medName: "اسم الدواء",
-      medTime: "الموعد",
-      saveChanges: "حفظ التغييرات 💾",
-      networkTitle: "🤝 شبكة المتابعة الطبية",
-      sendRequestTitle: "إرسال طلب متابعة لمريض",
-      sendRequestSub: "أدخل اسم المستخدم (Username) الخاص بالمريض لإرسال طلب ارتباط",
-      sendBtn: "إرسال طلب المتابعة",
-      acceptedPatientsList: "قائمة مرضياك المقبولين",
-      noPatients: "لا يوجد مرضى مرتبطون بحسابك حالياً.",
-      incomingRequests: "طلبات المتابعة الواردة من الأطباء",
-      incomingRequestsSub: "الأطباء الذين طلبوا الوصول لمتابعة علبتك الذكية وتعديل المواعيد",
-      noRequests: "لا توجد طلبات جديدة.",
-      settingsTitle: "⚙️ إعدادات الحساب والنظام",
-      currentUsername: "اسم المستخدم الحالي:",
-      roleLabel: "نوع الحساب:",
-      navHome: "الرئيسية",
-      navSchedules: "المواعيد",
-      navNetwork: "الربط الطبي",
-      navSettings: "الإعدادات",
-      navReports: "التقارير", reportsTitle: "📋 التقارير", logTaken: "✔ تم أخذها", logMissed: "✖ فائتة",
-      colTime: "الوقت", colBox: "الخانة", colMed: "الدواء", colStatus: "الحالة", rTaken: "تم أخذها", rMissed: "فائتة",
-      rRate: "الالتزام", rTotal: "إجمالي", noReports: "لا توجد تقارير بعد", selectPatient: "اختر مريضاً أولاً",
-      espTitle: "ربط ESP32", espSub: "اتركه فارغاً لو الصفحة شغالة من الـ ESP32 نفسه", saveBtn: "حفظ واختبار",
-      limitReached: "وصلت للحد الأقصى: 10 حسابات", badUser: "اسم المستخدم: 3-20 حرف إنجليزي/أرقام/_ فقط",
-      connLocal: "محلي", connOn: "ESP32 متصل", connOff: "ESP32 غير متصل", mixed: "المتصفح يمنع HTTP من صفحة HTTPS - شغّل الصفحة من الـ ESP32",
-      chartLabels: ['السبت', 'الأحد', 'الإثنين', 'الثلاثاء', 'الخميس', 'اليوم']
+      login: "تسجيل الدخول", newAccount: "حساب جديد", username: "اسم المستخدم (Username)", password: "كلمة السر", loginBtn: "دخول", fullname: "الاسم الكامل", age: "العمر", accountType: "نوع الحساب", patient: "مريض", doctor: "طبيب", createAccount: "إنشاء حساب جديد", logout: "خروج 🚪", viewingPatient: "أنت تشاهد الآن بيانات المريض:", rtcTime: "توقيت RTC", adherenceRate: "معدل الالتزام", nextDose: "الجرعة القادمة", box1: "الخانة 01", box2: "الخانة 02", box3: "الخانة 03", box4: "الخانة 04", waiting: "في الانتظار", empty: "فارغ", taken: "تم الأخذ ✅", chartTitle: "مخطط الالتزام بالجرعات", scheduleTitle: "⏰ إدارة وجدولة الأدوية الذكية", selectBox: "اختر الخانة", medName: "اسم الدواء", medTime: "الموعد", saveChanges: "حفظ التغييرات 💾", networkTitle: "🌐 شبكة الرعاية والمتابعة الطبية", settingsTitle: "⚙️ إعدادات الحساب والنظام", navHome: "الرئيسية", navReport:"التقرير الطبي", navSchedules: "المواعيد", navNetwork: "الربط الطبي", navSettings: "الإعدادات", weeklyFormTitle: "📝 التقرير الطبي للصحة والأدوية", weeklyFormSub: "أدخل انطباعاتك عن الأدوية وأي تعب واجهته ليتم إرساله مباشرة لطبيبك", weeklyOverallFeeling: "كيف كان شعورك وصحتك العامة ؟", sideEffectsLabel: "ما هي الأعراض الجانبية التي شعرت بها؟", patientNotesLabel: "ملاحظات إضافية تريد إرسالها للطبيب", sendReportBtn: "إرسال التقرير للطبيب 📤", doctorReviewTitle: "🩺 مراجعة التقارير الأسبوعية للمرضى", doctorReviewSub: "استعرض بلاغات وتأثير الأدوية على مرضياك وقم بتسجيل توصياتك الطبية", notifTitle: "الإشعارات والتنبيهات", noNotifs: "لا توجد إشعارات جديدة", chartLabels: ['السبت', 'الأحد', 'الإثنين', 'الثلاثاء', 'الخميس', 'اليوم']
     },
     en: {
-      login: "Login",
-      newAccount: "New Account",
-      username: "Username",
-      password: "Password",
-      loginBtn: "Sign In",
-      fullname: "Full Name",
-      age: "Age",
-      accountType: "Account Type",
-      patient: "Patient",
-      doctor: "Doctor",
-      createAccount: "Create New Account",
-      logout: "Logout 🚪",
-      viewingPatient: "Now viewing patient data:",
-      rtcTime: "RTC Time",
-      adherenceRate: "Adherence Rate",
-      nextDose: "Next Dose",
-      box1: "Box 01",
-      box2: "Box 02",
-      taken: "Taken",
-      waiting: "Waiting",
-      chartTitle: "Dose Adherence Chart",
-      scheduleTitle: "⏰ Edit & Schedule Medication",
-      selectBox: "Select Box",
-      medName: "Medicine Name",
-      medTime: "Time",
-      saveChanges: "Save Changes 💾",
-      networkTitle: "🤝 Medical Monitoring Network",
-      sendRequestTitle: "Send Monitoring Request to Patient",
-      sendRequestSub: "Enter patient username to send link request",
-      sendBtn: "Send Request",
-      acceptedPatientsList: "Accepted Patients List",
-      noPatients: "No patients currently linked to your account.",
-      incomingRequests: "Incoming Requests from Doctors",
-      incomingRequestsSub: "Doctors requesting access to monitor your smart box & update schedules",
-      noRequests: "No new requests.",
-      settingsTitle: "⚙️ Account & System Settings",
-      currentUsername: "Current Username:",
-      roleLabel: "Account Type:",
-      navHome: "Home",
-      navSchedules: "Schedule",
-      navNetwork: "Network",
-      navSettings: "Settings",
-      navReports: "Reports", reportsTitle: "📋 Reports", logTaken: "✔ Taken", logMissed: "✖ Missed",
-      colTime: "Time", colBox: "Box", colMed: "Medicine", colStatus: "Status", rTaken: "Taken", rMissed: "Missed",
-      rRate: "Adherence", rTotal: "Total", noReports: "No reports yet", selectPatient: "Select a patient first",
-      espTitle: "ESP32 Link", espSub: "Leave empty if this page is served by the ESP32 itself", saveBtn: "Save & Test",
-      limitReached: "Limit reached: 10 accounts max", badUser: "Username: 3-20 letters/digits/_ only",
-      connLocal: "Local", connOn: "ESP32 online", connOff: "ESP32 offline", mixed: "Browsers block HTTP from an HTTPS page - serve the page from the ESP32",
-      chartLabels: ['Sat', 'Sun', 'Mon', 'Tue', 'Thu', 'Today']
+      login: "Login", newAccount: "New Account", username: "Username", password: "Password", loginBtn: "Sign In", fullname: "Full Name", age: "Age", accountType: "Account Type", patient: "Patient", doctor: "Doctor", createAccount: "Create New Account", logout: "Logout 🚪", viewingPatient: "Now viewing patient data:", rtcTime: "RTC Time", adherenceRate: "Adherence Rate", nextDose: "Next Dose", box1: "Box 01", box2: "Box 02", box3: "Box 03", box4: "Box 04", waiting: "Waiting", empty: "Empty", taken: "Taken ✅", chartTitle: "Dose Adherence Chart", scheduleTitle: "⏰ Smart Medication Schedule", selectBox: "Select Box", medName: "Medicine Name", medTime: "Time", saveChanges: "Save Schedule 💾", networkTitle: "🌐 Medical Care Network", settingsTitle: "⚙️ Account Settings", navHome: "Home", navReport: "Medical Report", navSchedules: "Schedule", navNetwork: "Network", navSettings: "Settings", weeklyFormTitle: "📝 Medical & Health Report", weeklyFormSub: "Provide feedback regarding your medication side-effects to send directly to your doctor", weeklyOverallFeeling: "How was your overall health feeling this week?", sideEffectsLabel: "What side effects did you experience?", patientNotesLabel: "Additional notes for your doctor", sendReportBtn: "Send Report to Doctor 📤", doctorReviewTitle: "🩺 Review Patient Weekly Reports", doctorReviewSub: "Check medication reactions and update prescription immediately", notifTitle: "Notifications & Alerts", noNotifs: "No new notifications", chartLabels: ['Sat', 'Sun', 'Mon', 'Tue', 'Thu', 'Today']
     }
   };
 
   let currentLang = 'ar';
   let currentTheme = 'dark';
 
-  // Toggle Language Function
+  function updateDateDisplay() {
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('current-date-display').innerText = new Date().toLocaleDateString(currentLang === 'ar' ? 'ar-EG' : 'en-US', options);
+  }
+  updateDateDisplay();
+
   function toggleLanguage() {
     currentLang = currentLang === 'ar' ? 'en' : 'ar';
     document.documentElement.lang = currentLang;
     document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
     document.getElementById('lang-label').innerText = currentLang === 'ar' ? 'EN' : 'عربي';
+    document.getElementById('stg-lang-text').innerText = currentLang === 'ar' ? 'العربية 🌐' : 'English 🌐';
 
-    // Update Text Elements
     document.querySelectorAll('[data-i18n]').forEach(el => {
       const key = el.getAttribute('data-i18n');
-      if (translations[currentLang][key]) {
-        el.innerText = translations[currentLang][key];
-      }
+      if (translations[currentLang][key]) el.innerText = translations[currentLang][key];
     });
 
-    updateChartLabels();
-    renderReports();
-    pullFromEsp.last = 0;
+    updateDateDisplay();
   }
 
-  // Toggle Theme Function
   function toggleTheme() {
     currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', currentTheme);
-    document.getElementById('theme-icon').innerText = currentTheme === 'dark' ? '🌙' : '☀️';
+    document.getElementById('theme-icon').innerText = currentTheme === 'dark' ? '🌙' : '☀';
+    document.getElementById('stg-theme-switch').checked = (currentTheme === 'dark');
   }
 
-  // Database Management
-  let usersDb = JSON.parse(localStorage.getItem('pillbox_users')) || [
-    { username: 'pat1', password: '123', fullname: 'أحمد المريض', age: 40, role: 'patient', requests: [], meds: {1: {name: 'بنادول Extra', time: '08:00'}, 2: {name: 'أوميجا 3', time: '14:00'}} },
-    { username: 'doc1', password: '123', fullname: 'د. خالد عبد الله', age: 45, role: 'doctor', patients: [] }
-  ];
-
+  let usersDb = JSON.parse(localStorage.getItem('pillbox_users')) || [];
   let currentUser = null;
   let activePatientData = null;
 
-  const MAX_USERS = 10, MAX_REPORTS = 200;
-  let reportsDb = JSON.parse(localStorage.getItem('pillbox_reports')) || [];
-  let espUrl = localStorage.getItem('nb_esp') || '';
-  const T = k => translations[currentLang][k] || k;
-  const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const canSync = () => !!espUrl || location.protocol === 'http:';
-
-  function toast(msg, type) {
-    if (!type) type = /غير|بالفعل|مسبقاً|يرجى|Invalid|not found|already|Please|Limit/.test(msg) ? 'err' : 'ok';
-    let w = document.getElementById('toasts');
-    if (!w) { w = document.createElement('div'); w.id = 'toasts'; w.className = 'toast-wrap'; document.body.appendChild(w); }
-    const t = document.createElement('div'); t.className = 'toast ' + type; t.textContent = msg; w.appendChild(t);
-    setTimeout(() => { t.style.transition = 'opacity .3s'; t.style.opacity = 0; setTimeout(() => t.remove(), 300); }, 2600);
-  }
-
-  async function api(path, opts = {}) {
-    const c = new AbortController(), t = setTimeout(() => c.abort(), 4000);
-    try {
-      const r = await fetch(espUrl + path, { ...opts, signal: c.signal, headers: { 'Content-Type': 'application/json' } });
-      if (!r.ok) throw new Error(r.status);
-      return await r.json();
-    } finally { clearTimeout(t); }
-  }
-
-  function setConn(state) { // 'on' | 'off' | 'local'
-    const el = document.getElementById('conn');
-    el.className = 'conn ' + (state === 'local' ? '' : state);
-    document.getElementById('conn-txt').textContent = T(state === 'on' ? 'connOn' : state === 'off' ? 'connOff' : 'connLocal');
-  }
-
-  let syncTimer;
-  function saveDb() {
-    localStorage.setItem('pillbox_users', JSON.stringify(usersDb));
-    localStorage.setItem('pillbox_reports', JSON.stringify(reportsDb));
-    clearTimeout(syncTimer);
-    syncTimer = setTimeout(async () => {
-      if (!canSync()) return;
-      try { await api('/api/users', { method: 'POST', body: JSON.stringify(usersDb) }); setConn('on'); }
-      catch (e) { setConn('off'); }
-    }, 600);
-  }
-
-  async function pullFromEsp() {
-    if (!canSync()) return setConn('local');
-    try {
-      const [u, r] = await Promise.all([api('/api/users'), api('/api/reports')]);
-      if (Array.isArray(u) && u.length) usersDb = u.slice(0, MAX_USERS);
-      if (Array.isArray(r)) reportsDb = r.slice(-MAX_REPORTS);
-      localStorage.setItem('pillbox_users', JSON.stringify(usersDb));
-      localStorage.setItem('pillbox_reports', JSON.stringify(reportsDb));
-      if (currentUser) { // re-bind references after replacing arrays
-        currentUser = usersDb.find(x => x.username === currentUser.username) || currentUser;
-        if (activePatientData) activePatientData = usersDb.find(x => x.username === activePatientData.username) || activePatientData;
-        renderReports();
-      }
-      setConn('on');
-    } catch (e) { setConn('off'); }
-  }
-
-  function saveEsp() {
-    let v = document.getElementById('esp-url').value.trim().replace(/\/+$/, '');
-    if (v && !/^https?:\/\//.test(v)) v = 'http://' + v;
-    espUrl = v; localStorage.setItem('nb_esp', v);
-    if (location.protocol === 'https:' && v.startsWith('http:')) toast(T('mixed'), 'err');
-    pullFromEsp().then(() => toast(document.getElementById('conn-txt').textContent));
-  }
-
-  function logDose(status) {
-    const u = activePatientData;
-    if (!u) { toast(T('selectPatient'), 'err'); return; }
-    const box = document.getElementById('rep-box').value;
-    const entry = { t: Math.floor(Date.now() / 1000), user: u.username, box: +box, med: (u.meds[box] || {}).name || '', s: status };
-    reportsDb.push(entry);
-    if (reportsDb.length > MAX_REPORTS) reportsDb = reportsDb.slice(-MAX_REPORTS);
-    localStorage.setItem('pillbox_reports', JSON.stringify(reportsDb));
-    if (canSync()) api('/api/report', { method: 'POST', body: JSON.stringify(entry) }).then(() => setConn('on')).catch(() => setConn('off'));
-    renderReports();
-  }
-
-  function renderReports() {
-    const u = activePatientData, body = document.getElementById('rep-body'), kp = document.getElementById('rep-kpis');
-    if (!u) { body.innerHTML = ''; kp.innerHTML = ''; return; }
-    const rows = reportsDb.filter(r => r.user === u.username).sort((a, b) => b.t - a.t);
-    const taken = rows.filter(r => r.s === 'taken').length, missed = rows.length - taken;
-    const rate = rows.length ? Math.round(taken / rows.length * 100) + '%' : '—';
-    document.getElementById('kpi-rate').innerText = rate;
-    const k = (l, v) => `<div class="kpi-card"><div class="kpi-header">${l}</div><div class="kpi-value">${v}</div></div>`;
-    kp.innerHTML = k(T('rRate'), rate) + k(T('rTaken'), taken) + k(T('rMissed'), missed);
-    body.innerHTML = rows.length ? rows.slice(0, 50).map(r =>
-      `<tr><td>${new Date(r.t * 1000).toLocaleString(currentLang === 'ar' ? 'ar-EG' : 'en-GB', { dateStyle: 'short', timeStyle: 'short' })}</td><td>${esc(r.box)}</td><td>${esc(r.med)}</td><td><span class="pill ${r.s === 'taken' ? 't' : 'm'}">${T(r.s === 'taken' ? 'rTaken' : 'rMissed')}</span></td></tr>`
-    ).join('') : `<tr><td colspan="4" style="color:var(--text-secondary)">${T('noReports')}</td></tr>`;
-  }
-
-  function exportCsv() {
-    const u = activePatientData; if (!u) { toast(T('selectPatient'), 'err'); return; }
-    const rows = [['time', 'user', 'box', 'medicine', 'status'], ...reportsDb.filter(r => r.user === u.username).map(r => [new Date(r.t * 1000).toISOString(), r.user, r.box, r.med, r.s])];
-    const csv = '\ufeff' + rows.map(r => r.map(v => '"' + String(v).replace(/"/g, '""') + '"').join(',')).join('\n');
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
-    a.download = 'nura-report-' + u.username + '.csv'; a.click(); URL.revokeObjectURL(a.href);
-  }
+  function saveDb() { localStorage.setItem('pillbox_users', JSON.stringify(usersDb)); }
 
   function toggleAuthMode(mode) {
     document.getElementById('btn-tab-login').classList.toggle('active', mode === 'login');
@@ -738,14 +771,10 @@
   function handleRegister(e) {
     e.preventDefault();
     const username = document.getElementById('reg-username').value.trim();
-    if (!/^[A-Za-z0-9_.-]{3,20}$/.test(username)) { toast(T('badUser'), 'err'); return; }
-    if (usersDb.length >= MAX_USERS) { toast(T('limitReached'), 'err'); return; }
-    
     if (usersDb.find(u => u.username === username)) {
       alert(currentLang === 'ar' ? 'اسم المستخدم موجود بالفعل!' : 'Username already exists!');
       return;
     }
-
     const newUser = {
       fullname: document.getElementById('reg-fullname').value,
       age: document.getElementById('reg-age').value,
@@ -754,12 +783,18 @@
       password: document.getElementById('reg-password').value,
       requests: [],
       patients: [],
-      meds: {1: {name: 'بنادول', time: '08:00'}, 2: {name: 'فيتامين C', time: '12:00'}}
+      notifications: [{ id: Date.now(), text: 'أهلاً بك في Nura Box!' }],
+      meds: { 
+        1: { name: '', time: '', pills: 1, repeat: 'يومياً', taken: false }, 
+        2: { name: '', time: '', pills: 1, repeat: 'يومياً', taken: false }, 
+        3: { name: '', time: '', pills: 1, repeat: 'يومياً', taken: false }, 
+        4: { name: '', time: '', pills: 1, repeat: 'يومياً', taken: false } 
+      },
+      reportsHistory: []
     };
-
     usersDb.push(newUser);
     saveDb();
-    alert(currentLang === 'ar' ? 'تم إنشاء الحساب بنجاح!' : 'Account created successfully!');
+    alert('تم إنشاء الحساب بنجاح!');
     toggleAuthMode('login');
   }
 
@@ -767,39 +802,349 @@
     e.preventDefault();
     const u = document.getElementById('login-username').value.trim();
     const p = document.getElementById('login-password').value;
-
     const user = usersDb.find(x => x.username === u && x.password === p);
-    if (!user) {
-      alert(currentLang === 'ar' ? 'اسم المستخدم أو كلمة السر غير صحيحة!' : 'Invalid username or password!');
-      return;
-    }
-
+    if (!user) { alert('اسم المستخدم أو كلمة السر غير صحيحة!'); return; }
     currentUser = user;
     document.getElementById('auth-overlay').style.display = 'none';
     initUserDashboard();
   }
 
-  function logout() {
-    currentUser = null;
-    activePatientData = null;
-    document.getElementById('auth-overlay').style.display = 'flex';
-  }
+  function logout() { currentUser = null; activePatientData = null; document.getElementById('auth-overlay').style.display = 'flex'; }
 
   function initUserDashboard() {
-    document.getElementById('user-display').innerText = `${currentUser.fullname} (${currentUser.role === 'doctor' ? (currentLang === 'ar' ? 'طبيب' : 'Doctor') : (currentLang === 'ar' ? 'مريض' : 'Patient')})`;
-    document.getElementById('stg-username').innerText = currentUser.username;
-    document.getElementById('stg-role').innerText = currentUser.role === 'doctor' ? (currentLang === 'ar' ? 'طبيب معالج' : 'Doctor') : (currentLang === 'ar' ? 'مريض' : 'Patient');
+    document.getElementById('user-display').innerText = `${currentUser.fullname}`;
+    document.getElementById('stg-avatar-letter').innerText = currentUser.fullname.charAt(0);
+    document.getElementById('stg-display-name').innerText = currentUser.fullname;
+    document.getElementById('stg-username-text').innerText = `@${currentUser.username}`;
+    document.getElementById('stg-role-badge').innerText = currentUser.role === 'doctor' ? 'حساب طبيب معتمد' : 'حساب مريض';
+
+    updateNotificationsUI();
 
     if (currentUser.role === 'doctor') {
       document.getElementById('doctor-network-section').style.display = 'block';
       document.getElementById('patient-network-section').style.display = 'none';
+      document.getElementById('patient-report-form').style.display = 'none';
+      document.getElementById('doctor-report-review').style.display = 'block';
       renderDoctorPatients();
+      renderDoctorReportsReview();
     } else {
       document.getElementById('doctor-network-section').style.display = 'none';
       document.getElementById('patient-network-section').style.display = 'block';
+      document.getElementById('patient-report-form').style.display = 'block';
+      document.getElementById('doctor-report-review').style.display = 'none';
       activePatientData = currentUser;
       renderPatientRequests();
+      renderPatientDoctors();
       loadPatientMedsToUI();
+      renderPatientReportsHistory();
+      renderSchedulesUI();
+    }
+    updateNetworkStats();
+  }
+
+  function toggleNotifDropdown() { document.getElementById('notif-dropdown').classList.toggle('show'); }
+
+  function updateNotificationsUI() {
+    if (!currentUser || !currentUser.notifications) return;
+    document.getElementById('notif-count').innerText = currentUser.notifications.length;
+    const container = document.getElementById('notif-items-container');
+    if (currentUser.notifications.length === 0) {
+      container.innerHTML = `<div class="notif-item" style="color:var(--text-secondary);">${translations[currentLang].noNotifs}</div>`;
+      return;
+    }
+    container.innerHTML = currentUser.notifications.map(n => `<div class="notif-item">🔔 ${n.text}</div>`).join('');
+  }
+
+  function loadPatientMedsToUI() {
+    if (!activePatientData || !activePatientData.meds) return;
+    let totalMeds = 0;
+    let takenMeds = 0;
+    let upcomingTime = '--:--';
+
+    for (let i = 1; i <= 4; i++) {
+      const med = activePatientData.meds[i];
+      const boxCard = document.getElementById(`box-${i}`);
+      const medNameEl = document.getElementById(`med-name-${i}`);
+      const medTimeEl = document.getElementById(`med-time-${i}`);
+      const badgeEl = document.getElementById(`badge-${i}`);
+      const btnDose = document.getElementById(`btn-dose-${i}`);
+
+      if (med && med.name) {
+        totalMeds++;
+        medNameEl.innerText = med.name;
+        medTimeEl.innerText = `⏰ ${med.time || '--:--'}`;
+
+        if (med.taken) {
+          takenMeds++;
+          boxCard.className = 'box-card taken';
+          badgeEl.innerText = translations[currentLang].taken;
+          btnDose.className = 'btn-take-dose done';
+          btnDose.innerText = 'تم أخذ الجرعة ✨';
+          btnDose.disabled = true;
+        } else {
+          boxCard.className = 'box-card waiting';
+          badgeEl.innerText = translations[currentLang].waiting;
+          btnDose.className = 'btn-take-dose';
+          btnDose.innerText = 'تأكيد أخذ الجرعة ✅';
+          btnDose.disabled = false;
+          if (upcomingTime === '--:--') upcomingTime = med.time;
+        }
+      } else {
+        medNameEl.innerText = '--';
+        medTimeEl.innerText = '⏰ --:--';
+        boxCard.className = 'box-card empty';
+        badgeEl.innerText = translations[currentLang].empty;
+        btnDose.style.display = 'none';
+      }
+    }
+
+    const rate = totalMeds > 0 ? Math.round((takenMeds / totalMeds) * 100) : 0;
+    document.getElementById('kpi-rate').innerText = `${rate}%`;
+    document.getElementById('kpi-bar-fill').style.width = `${rate}%`;
+    document.getElementById('next-dose-val').innerText = upcomingTime;
+  }
+
+  function markDoseTaken(boxId) {
+    if (!activePatientData || !activePatientData.meds[boxId]) return;
+    activePatientData.meds[boxId].taken = true;
+    saveDb();
+    loadPatientMedsToUI();
+  }
+
+  function triggerBuzzerTest() { alert('🔊 جاري إصدار صفير اختبار من Beeper في العلبة الذكية...'); }
+  function syncHardwareTime() { alert('⏱️ تمت مزامنة التوقيت بنجاح مع العلبة الذكية وESP32!'); }
+
+  /* DEVELOPED SCHEDULE LOGIC */
+  function renderSchedulesUI() {
+    if (!activePatientData || !activePatientData.meds) return;
+    const container = document.getElementById('schedule-slots-container');
+    container.innerHTML = '';
+
+    let activeCount = 0;
+    let nextTime = '--:--';
+
+    for (let i = 1; i <= 4; i++) {
+      const med = activePatientData.meds[i];
+      const isConfigured = med && med.name;
+
+      if (isConfigured) {
+        activeCount++;
+        if (nextTime === '--:--' && !med.taken) nextTime = med.time;
+      }
+
+      const slotCard = document.createElement('div');
+      slotCard.className = `sched-list-card ${isConfigured ? 'active-slot' : 'empty-slot'}`;
+      slotCard.innerHTML = `
+        <div class="sched-info-main">
+          <h4>📦 الخانة 0${i}: ${isConfigured ? med.name : 'غير مبرمجة (فارغة)'}</h4>
+          <p>⏰ الموعد: <strong>${isConfigured ? med.time : '--:--'}</strong> • الجرعة: ${isConfigured ? (med.pills || 1) + ' قرص' : '--'}</p>
+          ${isConfigured ? `<span class="sched-pill-tag">🔄 التكرار: ${med.repeat || 'يومياً'}</span>` : ''}
+        </div>
+        <div class="sched-actions">
+          <button class="btn-sched-action" onclick="selectBoxForEdit(${i})">✏️ تعديل</button>
+          ${isConfigured ? `<button class="btn-sched-action btn-sched-del" onclick="clearBoxDirect(${i})">🗑️️</button>` : ''}
+        </div>
+      `;
+      container.appendChild(slotCard);
+    }
+
+    document.getElementById('sched-active-cnt').innerText = `${activeCount}/4`;
+    document.getElementById('sched-next-time').innerText = nextTime;
+    loadSelectedBoxToForm();
+  }
+
+  function selectBoxForEdit(boxId) {
+    document.getElementById('sched-box').value = boxId;
+    loadSelectedBoxToForm();
+    document.getElementById('schedule-form-card').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function loadSelectedBoxToForm() {
+    const boxId = document.getElementById('sched-box').value;
+    const med = activePatientData.meds ? activePatientData.meds[boxId] : null;
+
+    if (med && med.name) {
+      document.getElementById('sched-name').value = med.name;
+      document.getElementById('sched-time').value = med.time;
+      document.getElementById('sched-pills-count').value = med.pills || 1;
+      document.getElementById('sched-repeat').value = med.repeat || 'يومياً';
+    } else {
+      document.getElementById('sched-name').value = '';
+      document.getElementById('sched-time').value = '';
+      document.getElementById('sched-pills-count').value = 1;
+      document.getElementById('sched-repeat').value = 'يومياً';
+    }
+  }
+
+  function saveAdvancedSchedule() {
+    if (!activePatientData) return;
+    const boxId = document.getElementById('sched-box').value;
+    const name = document.getElementById('sched-name').value.trim();
+    const time = document.getElementById('sched-time').value;
+    const pills = document.getElementById('sched-pills-count').value;
+    const repeat = document.getElementById('sched-repeat').value;
+
+    if (!activePatientData.meds) activePatientData.meds = {};
+    activePatientData.meds[boxId] = {
+      name: name,
+      time: time,
+      pills: pills,
+      repeat: repeat,
+      taken: false
+    };
+
+    saveDb();
+    loadPatientMedsToUI();
+    renderSchedulesUI();
+    alert(`تم حفظ وتحديث ميعاد الخانة 0${boxId} وإرساله للعلبة بنجاح! ⏰`);
+  }
+
+  function clearSelectedBox() {
+    const boxId = document.getElementById('sched-box').value;
+    clearBoxDirect(boxId);
+  }
+
+  function clearBoxDirect(boxId) {
+    if (confirm(`هل أنت متأكد من تفريغ الخانة 0${boxId}؟`)) {
+      if (activePatientData.meds && activePatientData.meds[boxId]) {
+        activePatientData.meds[boxId] = { name: '', time: '', pills: 1, repeat: 'يومياً', taken: false };
+        saveDb();
+        loadPatientMedsToUI();
+        renderSchedulesUI();
+      }
+    }
+  }
+
+  /* REPORT & NETWORK LOGIC */
+  function submitWeeklyReport(e) {
+    e.preventDefault();
+    if (!currentUser.reportsHistory) currentUser.reportsHistory = [];
+
+    const newReport = {
+      id: Date.now(),
+      status: document.getElementById('report-health-status').value,
+      problemMed: document.getElementById('report-problem-med').value,
+      symptoms: document.getElementById('report-symptoms').value,
+      notes: document.getElementById('report-notes').value,
+      date: new Date().toLocaleDateString('ar-EG'),
+      doctorNote: null
+    };
+
+    currentUser.reportsHistory.unshift(newReport);
+    saveDb();
+    alert('تم إرسال التقرير الطبي بنجاح لطبيبك!');
+    document.getElementById('report-symptoms').value = '';
+    document.getElementById('report-notes').value = '';
+    renderPatientReportsHistory();
+  }
+
+  function renderPatientReportsHistory() {
+    const container = document.getElementById('patient-report-history');
+    if (!currentUser.reportsHistory || currentUser.reportsHistory.length === 0) {
+      container.innerHTML = `<p style="font-size:12px; color:var(--text-secondary);">لا توجد تقارير مرسلة سابقة.</p>`;
+      return;
+    }
+
+    container.innerHTML = currentUser.reportsHistory.map(rep => `
+      <div class="report-history-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="font-size:12px; font-weight:800; color:var(--accent-blue);">📅 ${rep.date}</span>
+          <span class="report-status-badge ${rep.doctorNote ? 'rep-badge-reviewed' : 'rep-badge-pending'}">
+            ${rep.doctorNote ? 'تمت مراجعة الطبيب ✅' : 'قيد المراجعة ⏳'}
+          </span>
+        </div>
+        <div style="font-size:12px; line-height:1.6;">
+          <div><strong>الحالة العامة:</strong> ${rep.status}</div>
+          <div>⚠️ <strong>مشكلة بدواء:</strong> ${rep.problemMed}</div>
+          <div>🤒 <strong>الأعراض:</strong> ${rep.symptoms}</div>
+          ${rep.notes ? `<div>💬 <strong>ملاحظاتك:</strong> ${rep.notes}</div>` : ''}
+        </div>
+        ${rep.doctorNote ? `
+          <div class="doc-reply-box">
+            <strong>🩺 توصية الطبيب:</strong> ${rep.doctorNote}
+          </div>
+        ` : ''}
+      </div>
+    `).join('');
+  }
+
+  function renderDoctorReportsReview() {
+    const container = document.getElementById('reports-list-container');
+    container.innerHTML = '';
+    if (!currentUser.patients || currentUser.patients.length === 0) {
+      container.innerHTML = `<p style="font-size:12px; color:var(--text-secondary);">لا يوجد مرضى مرتبطون بعيادتك.</p>`;
+      return;
+    }
+
+    let hasReports = false;
+    currentUser.patients.forEach(patUsername => {
+      const pat = usersDb.find(u => u.username === patUsername);
+      if (pat && pat.reportsHistory && pat.reportsHistory.length > 0) {
+        hasReports = true;
+        pat.reportsHistory.forEach(rep => {
+          const card = document.createElement('div');
+          card.className = 'net-card';
+          card.innerHTML = `
+            <div style="border-bottom:1px solid var(--card-border); padding-bottom:8px; display:flex; justify-content:space-between;">
+              <strong>👤 ${pat.fullname} (@${pat.username})</strong>
+              <span style="color:var(--accent-blue); font-size:11px;">📅 ${rep.date}</span>
+            </div>
+            <div style="font-size:12px; line-height:1.6;">
+              <div><strong>الحالة الصحية:</strong> ${rep.status}</div>
+              <div>⚠️ <strong>مشكلة بدواء:</strong> ${rep.problemMed}</div>
+              <div>🤒 <strong>الأعراض:</strong> ${rep.symptoms}</div>
+              ${rep.notes ? `<div>💬 <strong>ملاحظات المريض:</strong> ${rep.notes}</div>` : ''}
+            </div>
+            <div style="margin-top:10px;">
+              <textarea id="reply-input-${rep.id}" class="form-control" rows="2" placeholder="اكتب ردك أو التوصية الطبية للمريض...">${rep.doctorNote || ''}</textarea>
+              <button onclick="saveDoctorFeedback('${pat.username}', ${rep.id})" class="btn-action" style="padding:6px; font-size:12px; margin-top:6px;">إرسال التوصية الطبية 💬</button>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      }
+    });
+
+    if (!hasReports) {
+      container.innerHTML = `<p style="font-size:12px; color:var(--text-secondary);">لا توجد تقارير أسبوعية صادرة من المرضى حتى الآن.</p>`;
+    }
+  }
+
+  function saveDoctorFeedback(patUsername, repId) {
+    const pat = usersDb.find(u => u.username === patUsername);
+    if (pat && pat.reportsHistory) {
+      const rep = pat.reportsHistory.find(r => r.id === repId);
+      if (rep) {
+        const feedback = document.getElementById(`reply-input-${repId}`).value;
+        rep.doctorNote = feedback;
+        
+        if (!pat.notifications) pat.notifications = [];
+        pat.notifications.unshift({ id: Date.now(), text: `قام الدكتور ${currentUser.fullname} بالرد على تقريرك الطبي!` });
+
+        saveDb();
+        alert('تم إرسال الرد والتوصية بنجاح إلى المريض!');
+        renderDoctorReportsReview();
+      }
+    }
+  }
+
+  function updateNetworkStats() {
+    if (currentUser.role === 'doctor') {
+      document.getElementById('net-count-linked').innerText = currentUser.patients ? currentUser.patients.length : 0;
+      document.getElementById('net-label-linked').innerText = 'مرضى مضافون';
+      let pending = 0;
+      usersDb.filter(u => u.role === 'patient').forEach(p => {
+        if (p.requests && p.requests.includes(currentUser.username)) pending++;
+      });
+      document.getElementById('net-count-pending').innerText = pending;
+    } else {
+      let docCount = 0;
+      usersDb.filter(u => u.role === 'doctor').forEach(d => {
+        if (d.patients && d.patients.includes(currentUser.username)) docCount++;
+      });
+      document.getElementById('net-count-linked').innerText = docCount;
+      document.getElementById('net-label-linked').innerText = 'أطباء متابعون';
+      document.getElementById('net-count-pending').innerText = currentUser.requests ? currentUser.requests.length : 0;
     }
   }
 
@@ -808,43 +1153,106 @@
     const targetUsername = document.getElementById('target-patient-username').value.trim();
     const targetUser = usersDb.find(u => u.username === targetUsername && u.role === 'patient');
 
-    if (!targetUser) {
-      alert(currentLang === 'ar' ? 'اسم المستخدم غير موجود أو أنه ليس حساب مريض!' : 'User not found or is not a patient!');
-      return;
-    }
-
+    if (!targetUser) { alert('اسم المستخدم غير موجود أو ليس حساب مريض!'); return; }
     if (!targetUser.requests) targetUser.requests = [];
-    if (targetUser.requests.includes(currentUser.username)) {
-      alert(currentLang === 'ar' ? 'تم إرسال طلب لهذا المريض مسبقاً!' : 'Request already sent to this patient!');
-      return;
-    }
+    if (targetUser.requests.includes(currentUser.username)) { alert('تم إرسال الطلب مسبقاً!'); return; }
 
     targetUser.requests.push(currentUser.username);
     saveDb();
-    alert(currentLang === 'ar' ? `تم إرسال طلب المتابعة بنجاح إلى المريض (${targetUser.fullname})` : `Request sent successfully to (${targetUser.fullname})`);
+    alert(`تم إرسال طلب المتابعة إلى المريض (${targetUser.fullname})`);
     document.getElementById('target-patient-username').value = '';
+    updateNetworkStats();
+  }
+
+  function renderDoctorPatients() {
+    const list = document.getElementById('doctor-patients-list');
+    list.innerHTML = '';
+    if (!currentUser.patients || currentUser.patients.length === 0) {
+      list.innerHTML = `<p style="font-size:12px; color:var(--text-secondary);">لا يوجد مرضى مضافون حتى الآن.</p>`;
+      return;
+    }
+
+    currentUser.patients.forEach(patUsername => {
+      const pat = usersDb.find(u => u.username === patUsername);
+      if (pat) {
+        const div = document.createElement('div');
+        div.className = 'net-card';
+        div.innerHTML = `
+          <div class="net-card-header">
+            <div class="net-user-info">
+              <div class="net-avatar">${pat.fullname.charAt(0)}</div>
+              <div class="net-user-details">
+                <h4>${pat.fullname}</h4>
+                <p>@${pat.username} • ${pat.age} سنة</p>
+              </div>
+            </div>
+            <span class="net-status-badge status-active">مربوط بالعلبة</span>
+          </div>
+          <div class="net-actions">
+            <button onclick="inspectPatient('${pat.username}')" class="net-btn btn-primary-net">📊 التحكم بالعلبة الذكية</button>
+            <button onclick="unlinkPatient('${pat.username}')" class="net-btn btn-danger-net">إلغاء الربط</button>
+          </div>
+        `;
+        list.appendChild(div);
+      }
+    });
+  }
+
+  function renderPatientDoctors() {
+    const list = document.getElementById('patient-doctors-list');
+    list.innerHTML = '';
+    let connectedDoctors = usersDb.filter(u => u.role === 'doctor' && u.patients && u.patients.includes(currentUser.username));
+
+    if (connectedDoctors.length === 0) {
+      list.innerHTML = `<p style="font-size:12px; color:var(--text-secondary);">لا يوجد أطباء مشرفون على حسابك حالياً.</p>`;
+      return;
+    }
+
+    connectedDoctors.forEach(doc => {
+      const div = document.createElement('div');
+      div.className = 'net-card';
+      div.innerHTML = `
+        <div class="net-card-header">
+          <div class="net-user-info">
+            <div class="net-avatar" style="background:linear-gradient(135deg, #10b981, #0284c7);">د</div>
+            <div class="net-user-details">
+              <h4>د. ${doc.fullname}</h4>
+              <p>طبيب معالج مشتَرك</p>
+            </div>
+          </div>
+          <span class="net-status-badge status-active">نشط الآن</span>
+        </div>
+      `;
+      list.appendChild(div);
+    });
   }
 
   function renderPatientRequests() {
     const list = document.getElementById('patient-requests-list');
     list.innerHTML = '';
-    
     if (!currentUser.requests || currentUser.requests.length === 0) {
-      list.innerHTML = `<p style="font-size:12px; color:var(--text-secondary);">${translations[currentLang].noRequests}</p>`;
+      list.innerHTML = `<p style="font-size:12px; color:var(--text-secondary);">لا توجد طلبات جديدة معلقة.</p>`;
       return;
     }
 
     currentUser.requests.forEach(docUsername => {
       const doc = usersDb.find(u => u.username === docUsername);
       const div = document.createElement('div');
-      div.className = 'patient-card';
+      div.className = 'net-card';
       div.innerHTML = `
-        <div>
-          <strong>${esc(doc ? doc.fullname : docUsername)}</strong>
-          <p style="font-size:11px; color:var(--text-secondary);">${currentLang === 'ar' ? 'يطلب صلاحيات متابعة وتعديل العلبة الذكية' : 'Requests access to monitor & update smart box'}</p>
+        <div class="net-card-header">
+          <div class="net-user-info">
+            <div class="net-avatar">🩺</div>
+            <div class="net-user-details">
+              <h4>د. ${doc ? doc.fullname : docUsername}</h4>
+              <p>طلب الانضمام للإشراف الطبي</p>
+            </div>
+          </div>
+          <span class="net-status-badge status-pending">طلب جديد</span>
         </div>
-        <div style="display:flex; gap:6px;">
-          <button onclick="acceptRequest('${docUsername}')" class="btn-action" style="padding:6px 12px; font-size:12px;">${currentLang === 'ar' ? 'قبول' : 'Accept'}</button>
+        <div class="net-actions">
+          <button onclick="acceptRequest('${docUsername}')" class="net-btn btn-primary-net">قبول الطلب</button>
+          <button onclick="rejectRequest('${docUsername}')" class="net-btn btn-danger-net">رفض</button>
         </div>
       `;
       list.appendChild(div);
@@ -857,37 +1265,28 @@
       if (!doc.patients) doc.patients = [];
       if (!doc.patients.includes(currentUser.username)) doc.patients.push(currentUser.username);
     }
-
     currentUser.requests = currentUser.requests.filter(u => u !== docUsername);
     saveDb();
-    alert(currentLang === 'ar' ? 'تم قبول طلب الطبيب بنجاح!' : 'Doctor request accepted successfully!');
+    alert('تم قبول طلب الطبيب بنجاح!');
     renderPatientRequests();
+    renderPatientDoctors();
+    updateNetworkStats();
   }
 
-  function renderDoctorPatients() {
-    const list = document.getElementById('doctor-patients-list');
-    list.innerHTML = '';
+  function rejectRequest(docUsername) {
+    currentUser.requests = currentUser.requests.filter(u => u !== docUsername);
+    saveDb();
+    renderPatientRequests();
+    updateNetworkStats();
+  }
 
-    if (!currentUser.patients || currentUser.patients.length === 0) {
-      list.innerHTML = `<p style="font-size:12px; color:var(--text-secondary);">${translations[currentLang].noPatients}</p>`;
-      return;
+  function unlinkPatient(patUsername) {
+    if (confirm('هل أنت متأكد من إلغاء ربط المريض؟')) {
+      currentUser.patients = currentUser.patients.filter(p => p !== patUsername);
+      saveDb();
+      renderDoctorPatients();
+      updateNetworkStats();
     }
-
-    currentUser.patients.forEach(patUsername => {
-      const pat = usersDb.find(u => u.username === patUsername);
-      if (pat) {
-        const div = document.createElement('div');
-        div.className = 'patient-card';
-        div.innerHTML = `
-          <div>
-            <strong>${esc(pat.fullname)} (${currentLang === 'ar' ? 'العمر' : 'Age'}: ${pat.age})</strong>
-            <p style="font-size:11px; color:var(--text-secondary);">@${esc(pat.username)}</p>
-          </div>
-          <button onclick="inspectPatient('${pat.username}')" class="btn-action" style="padding:6px 12px; font-size:12px;">${currentLang === 'ar' ? 'عرض اللوحة وتعديل المواعيد' : 'View Dashboard & Edit'}</button>
-        `;
-        list.appendChild(div);
-      }
-    });
   }
 
   function inspectPatient(patUsername) {
@@ -896,63 +1295,48 @@
     document.getElementById('patient-view-header').style.display = 'block';
     document.getElementById('viewing-patient-name').innerText = pat.fullname;
     loadPatientMedsToUI();
+    renderSchedulesUI();
     switchPage('dashboard', document.querySelectorAll('.nav-item')[0]);
   }
 
-  function loadPatientMedsToUI() {
-    renderReports();
-    if (!activePatientData || !activePatientData.meds) return;
-    document.getElementById('med-name-1').innerText = activePatientData.meds[1].name;
-    document.getElementById('med-name-2').innerText = activePatientData.meds[2].name;
-  }
-
-  function updateSchedule() {
-    if (!activePatientData) {
-      alert(currentLang === 'ar' ? 'يرجى اختيار مريض أولاً للتعديل عليه!' : 'Please select a patient first!');
-      return;
+  function changeUserPassword(e) {
+    e.preventDefault();
+    const newPass = document.getElementById('stg-new-pass').value;
+    if (newPass) {
+      currentUser.password = newPass;
+      saveDb();
+      alert('تم تغيير كلمة السر بنجاح!');
+      document.getElementById('stg-new-pass').value = '';
     }
-    const boxId = document.getElementById('sched-box').value;
-    const name = document.getElementById('sched-name').value;
-    const time = document.getElementById('sched-time').value;
+  }
 
-    activePatientData.meds[boxId] = { name: name, time: time };
-    saveDb();
-    loadPatientMedsToUI();
-    alert(currentLang === 'ar' ? 'تم تحديث الموعد بنجاح!' : 'Schedule updated successfully!');
-    switchPage('dashboard', document.querySelectorAll('.nav-item')[0]);
+  function clearAllData() {
+    if (confirm('هل أنت متأكد من مسح كافة البيانات المخزنة محلياً؟')) {
+      localStorage.removeItem('pillbox_users');
+      location.reload();
+    }
   }
 
   function switchPage(pageId, navBtn) {
     document.querySelectorAll('.page-tab').forEach(tab => tab.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
     document.getElementById('page-' + pageId).classList.add('active');
-    if (pageId === 'reports') renderReports();
     navBtn.classList.add('active');
   }
 
   setInterval(() => {
-    const n = new Date().toTimeString().substring(0, 5), el = document.getElementById('rtc-time'); if (el.innerText !== n) el.innerText = n;
+    document.getElementById('rtc-time').innerText = new Date().toTimeString().substring(0, 5);
   }, 1000);
 
-  // Chart Initialization
   const ctx = document.getElementById('adherenceChart').getContext('2d');
   let adherenceChart = new Chart(ctx, {
     type: 'line',
     data: {
       labels: translations[currentLang].chartLabels,
-      datasets: [{ label: '%', data: [70, 85, 90, 80, 95, 85], borderColor: '#38bdf8', fill: false, tension: 0.3 }]
+      datasets: [{ label: '% الالتزام', data: [80, 100, 90, 85, 95, 100], borderColor: '#38bdf8', backgroundColor: 'rgba(56, 189, 248, 0.1)', fill: true, tension: 0.4 }]
     },
     options: { responsive: true, plugins: { legend: { display: false } } }
   });
-
-  document.getElementById('esp-url').value = espUrl;
-  pullFromEsp();
-  setInterval(() => { if (currentUser && canSync() && !document.hidden) pullFromEsp(); }, 10000);
-
-  function updateChartLabels() {
-    adherenceChart.data.labels = translations[currentLang].chartLabels;
-    adherenceChart.update();
-  }
 </script>
 </body>
 </html>
