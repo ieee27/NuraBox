@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nura Box - Smart Care Smarter Life</title>
+<!-- Fonts & Chart.js -->
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+  /* Color Variables - Dark Theme (Default) */
+  :root {
+    --bg: #0f172a;
+    --header-bg: rgba(30, 41, 59, 0.8);
+    --card-bg: rgba(15, 23, 42, 0.82);
+    --card-border: rgba(255, 255, 255, 0.15);
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --accent-blue: #38bdf8;
+    --accent-indigo: #6366f1;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --radius: 18px;
+    --bottom-nav-bg: rgba(30, 41, 59, 0.9);
+  }
+
+  /* Light Theme Overrides */
+  [data-theme="light"] {
+    --bg: #f1f5f9;
+    --header-bg: rgba(255, 255, 255, 0.85);
+    --card-bg: rgba(255, 255, 255, 0.9);
+    --card-border: rgba(0, 0, 0, 0.1);
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --accent-blue: #0284c7;
+    --accent-indigo: #4f46e5;
+    --bottom-nav-bg: rgba(255, 255, 255, 0.95);
+  }
+
+  * { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: 'Tajawal', sans-serif; 
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+
+  body { 
+    background-color: var(--bg); 
+    color: var(--text-primary); 
+    min-height: 100vh; 
+    padding-bottom: 90px; 
+  }
+
+  /* Control Action Buttons (Theme & Language Switchers) */
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ctrl-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--card-border);
+    color: var(--text-primary);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    outline: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .ctrl-btn:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 4px 12px rgba(56, 189, 248, 0.2);
+    border-color: var(--accent-blue);
+  }
+
+  .ctrl-btn:active {
+    transform: translateY(0) scale(0.95);
+  }
+
+  .icon-spin {
+    display: inline-block;
+    transition: transform 0.5s ease-in-out;
+  }
+
+  .ctrl-btn:hover .icon-spin {
+    transform: rotate(360deg);
+  }
+
+  /* Auth Screen Styling */
+  .auth-overlay {
+    position: fixed; inset: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: center; padding: 20px;
+    background: linear-gradient(rgba(15, 23, 42, 0.35), rgba(15, 23, 42, 0.45)), 
+                url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1600&q=85') center/cover no-repeat;
+  }
+
+  .auth-card {
+    background: var(--card-bg); 
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--card-border);
+    padding: 28px 24px; border-radius: var(--radius); width: 100%; max-width: 440px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: zoomIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes zoomIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .auth-card::-webkit-scrollbar { width: 6px; }
+  .auth-card::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
+
+  .auth-header { text-align: center; margin-bottom: 22px; }
+  .auth-header h2 { font-size: 26px; font-weight: 800; color: var(--text-primary); letter-spacing: 0.5px; }
+  .auth-header p { font-size: 13px; color: var(--accent-blue); font-weight: 700; margin-top: 4px; }
+
+  .auth-toggle {
+    display: flex; background: rgba(0, 0, 0, 0.2); padding: 4px;
+    border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--card-border);
+  }
+  .auth-toggle button {
+    flex: 1; padding: 10px; border: none; background: none; color: var(--text-secondary);
+    border-radius: 9px; cursor: pointer; font-weight: 700; font-size: 14px; transition: all 0.3s;
+  }
+  .auth-toggle button.active { background: var(--accent-indigo); color: white; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); }
+
+  .form-row { display: flex; gap: 10px; }
+  .form-row .form-group { flex: 1; }
+
+  .form-group { margin-bottom: 14px; }
+  .form-group label { display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; font-weight: 600; }
+  .form-control { 
+    width: 100%; background: var(--bg); border: 1px solid var(--card-border); 
+    color: var(--text-primary); padding: 10px 14px; border-radius: 10px; font-size: 13px; outline: none; 
+  }
+  .form-control:focus { border-color: var(--accent-blue); }
+
+  .btn-action { 
+    width: 100%; background: linear-gradient(135deg, var(--accent-indigo), var(--accent-blue)); 
+    color: white; border: none; padding: 12px; border-radius: 10px; font-size: 15px; font-weight: 700; 
+    cursor: pointer; margin-top: 6px; box-shadow: 0 4px 12px rgba(56, 189, 248, 0.25);
+    transition: transform 0.2s, opacity 0.2s;
+  }
+  .btn-action:hover { opacity: 0.95; transform: translateY(-1px); }
+
+  /* Header Header & Bar */
+  header {
+    background: var(--header-bg); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--card-border); position: sticky; top: 0; z-index: 50;
+    padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand-logo { width: 42px; height: 42px; background: linear-gradient(135deg, var(--accent-indigo), var(--accent-blue)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; color: #fff; }
+  .brand-text h1 { font-size: 18px; font-weight: 800; }
+  .brand-text p { font-size: 11px; color: var(--accent-blue); }
+
+  .header-right { display: flex; align-items: center; gap: 10px; }
+
+  .user-badge {
+    background: rgba(255,255,255,0.05); border: 1px solid var(--card-border);
+    padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .btn-logout { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 12px; font-weight: 700; }
+
+  .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
+
+  /* Page Tab Animations */
+  .page-tab { display: none; }
+  .page-tab.active { display: block; animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Dashboard Cards */
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 15px; margin-bottom: 25px; }
+  .kpi-card { background: var(--card-bg); border: 1px solid var(--card-border); padding: 18px; border-radius: var(--radius); }
+  .kpi-header { font-size: 12px; color: var(--text-secondary); margin-bottom: 10px; display: flex; justify-content: space-between; }
+  .kpi-value { font-size: 26px; font-weight: 800; }
+
+  .boxes-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 25px; }
+  @media(max-width: 500px) { .boxes-grid { grid-template-columns: 1fr; } }
+
+  .box-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 20px; position: relative; overflow: hidden; }
+  .box-card::before { content:''; position: absolute; top:0; right:0; left:0; height: 4px; background: var(--text-secondary); }
+  .box-card.taken::before { background: var(--success); }
+  .box-card.waiting::before { background: var(--warning); }
+  .box-top { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; }
+  .box-badge { padding: 4px 10px; border-radius: 20px; font-weight: 700; }
+  .taken .box-badge { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+  .waiting .box-badge { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+  .medicine-name { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+
+  .custom-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 22px; margin-bottom: 20px; }
+
+  .patient-card { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); padding: 15px; border-radius: 12px; margin-bottom: 10px; }
+
+  /* Bottom Navigation */
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bottom-nav-bg); backdrop-filter: blur(12px); border-top: 1px solid var(--card-border); display: flex; justify-content: space-around; padding: 12px 0; z-index: 100; }
+  .nav-item { border: none; background: none; color: var(--text-secondary); font-size: 11px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; width: 25%; transition: color 0.2s, transform 0.2s; }
+  .nav-item.active { color: var(--accent-blue); font-weight: 700; transform: translateY(-2px); }
+  .nav-item svg { width: 22px; height: 22px; fill: currentColor; }
+</style>
+</head>
+<body>
+
+<!-- ==================== AUTH OVERLAY ==================== -->
+<div class="auth-overlay" id="auth-overlay">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h2>Nura Box</h2>
+      <p>Smart Care Smarter Life</p>
+    </div>
+
+    <div class="auth-toggle">
+      <button id="btn-tab-login" class="active" onclick="toggleAuthMode('login')" data-i18n="login">تسجيل الدخول</button>
+      <button id="btn-tab-register" onclick="toggleAuthMode('register')" data-i18n="newAccount">حساب جديد</button>
+    </div>
+
+    <!-- Login Form -->
+    <form id="form-login" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label data-i18n="username">اسم المستخدم (Username)</label>
+        <input type="text" id="login-username" class="form-control" placeholder="أدخل اسم المستخدم" required>
+      </div>
+      <div class="form-group">
+        <label data-i18n="password">كلمة السر</label>
+        <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
+      </div>
+      <button type="submit" class="btn-action" data-i18n="loginBtn">دخول</button>
+    </form>
+
+    <!-- Register Form -->
+    <form id="form-register" style="display:none;" onsubmit="handleRegister(event)">
+      <div class="form-group">
+        <label data-i18n="fullname">الاسم الكامل</label>
+        <input type="text" id="reg-fullname" class="form-control" placeholder="أدخل اسمك بالكامل" required>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label data-i18n="age">العمر</label>
+          <input type="number" id="reg-age" class="form-control" placeholder="35" required>
+        </div>
+        <div class="form-group">
+          <label data-i18n="accountType">نوع الحساب</label>
+          <select id="reg-role" class="form-control" required>
+            <option value="patient" data-i18n="patient">مريض</option>
+            <option value="doctor" data-i18n="doctor">طبيب</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label data-i18n="username">اسم المستخدم (Username)</label>
+        <input type="text" id="reg-username" class="form-control" placeholder="اسم مستخدم مميز" required>
+      </div>
+      <div class="form-group">
+        <label data-i18n="password">كلمة السر</label>
+        <input type="password" id="reg-password" class="form-control" placeholder="••••••••" required>
+      </div>
+      <button type="submit" class="btn-action" data-i18n="createAccount">إنشاء حساب جديد</button>
+    </form>
+  </div>
+</div>
+
+<!-- ==================== MAIN DASHBOARD ==================== -->
+<header>
+  <div class="brand">
+    <div class="brand-logo">NB</div>
+    <div class="brand-text">
+      <h1>Nura Box</h1>
+      <p>Smart Care Smarter Life</p>
+    </div>
+  </div>
+
+  <div class="header-right">
+    <!-- Controls: Language & Theme -->
+    <div class="header-actions">
+      <button class="ctrl-btn" id="lang-toggle-btn" onclick="toggleLanguage()" aria-label="Toggle Language">
+        <span class="icon-spin">🌐</span>
+        <span id="lang-label">EN</span>
+      </button>
+
+      <button class="ctrl-btn" id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle Theme">
+        <span id="theme-icon" class="icon-spin">🌙</span>
+      </button>
+    </div>
+
+    <div class="user-badge">
+      <span id="user-display">المستخدم</span>
+      <button class="btn-logout" onclick="logout()" data-i18n="logout">خروج 🚪</button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- PAGE 1: MAIN DASHBOARD -->
+  <div class="page-tab active" id="page-dashboard">
+    <div id="patient-view-header" style="display:none; background:rgba(99,102,241,0.2); padding:10px 15px; border-radius:12px; margin-bottom:15px;">
+      👁️ <strong data-i18n="viewingPatient">أنت تشاهد الآن بيانات المريض:</strong> <span id="viewing-patient-name" style="color:var(--accent-blue);">--</span>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-header"><span data-i18n="rtcTime">توقيت RTC</span> ⏰</div>
+        <div class="kpi-value" id="rtc-time">08:30</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-header"><span data-i18n="adherenceRate">معدل الالتزام</span> 📈</div>
+        <div class="kpi-value" id="kpi-rate">85%</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-header"><span data-i18n="nextDose">الجرعة القادمة</span> ⌛</div>
+        <div class="kpi-value">14:00</div>
+      </div>
+    </div>
+
+    <div class="boxes-grid">
+      <div class="box-card taken" id="box-1">
+        <div class="box-top"><span data-i18n="box1">الخانة 01</span><span class="box-badge" data-i18n="taken">تم أخذها</span></div>
+        <div class="medicine-name" id="med-name-1">بنادول Extra</div>
+        <div style="font-size:12px; color:var(--text-secondary);">⏰ 08:00 صباحاً</div>
+      </div>
+      <div class="box-card waiting" id="box-2">
+        <div class="box-top"><span data-i18n="box2">الخانة 02</span><span class="box-badge" data-i18n="waiting">في الانتظار</span></div>
+        <div class="medicine-name" id="med-name-2">أوميجا 3</div>
+        <div style="font-size:12px; color:var(--text-secondary);">⏰ 02:00 مساءً</div>
+      </div>
+    </div>
+
+    <div class="custom-card">
+      <div style="font-size:16px; font-weight:700; margin-bottom:15px;" data-i18n="chartTitle">مخطط الالتزام بالجرعات</div>
+      <canvas id="adherenceChart" height="120"></canvas>
+    </div>
+  </div>
+
+  <!-- PAGE 2: SCHEDULES -->
+  <div class="page-tab" id="page-schedules">
+    <div style="font-size:18px; font-weight:700; margin-bottom:15px;" data-i18n="scheduleTitle">⏰ تعديل وجدولة الأدوية</div>
+    <div class="custom-card">
+      <form onsubmit="event.preventDefault(); updateSchedule();">
+        <div class="form-group">
+          <label data-i18n="selectBox">اختر الخانة</label>
+          <select class="form-control" id="sched-box">
+            <option value="1" data-i18n="box1">الخانة 1</option>
+            <option value="2" data-i18n="box2">الخانة 2</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label data-i18n="medName">اسم الدواء</label>
+          <input type="text" id="sched-name" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label data-i18n="medTime">الموعد</label>
+          <input type="time" id="sched-time" class="form-control" required>
+        </div>
+        <button type="submit" class="btn-action" data-i18n="saveChanges">حفظ التغييرات 💾</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- PAGE 3: NETWORK -->
+  <div class="page-tab" id="page-network">
+    <div style="font-size:18px; font-weight:700; margin-bottom:15px;" data-i18n="networkTitle">🤝 شبكة المتابعة الطبية</div>
+
+    <!-- Doctor View Section -->
+    <div id="doctor-network-section" class="custom-card" style="display:none;">
+      <h3 data-i18n="sendRequestTitle">إرسال طلب متابعة لمريض</h3>
+      <p style="font-size:12px; color:var(--text-secondary); margin-bottom:15px;" data-i18n="sendRequestSub">أدخل اسم المستخدم (Username) الخاص بالمريض لإرسال طلب ارتباط</p>
+      <form onsubmit="sendPatientRequest(event)">
+        <div class="form-group">
+          <input type="text" id="target-patient-username" class="form-control" placeholder="اسم مستخدم المريض..." required>
+        </div>
+        <button type="submit" class="btn-action" data-i18n="sendBtn">إرسال طلب المتابعة</button>
+      </form>
+
+      <h3 style="margin-top:25px; margin-bottom:10px;" data-i18n="acceptedPatientsList">قائمة مرضياك المقبولين</h3>
+      <div id="doctor-patients-list">
+        <p style="font-size:12px; color:var(--text-secondary);" data-i18n="noPatients">لا يوجد مرضى مرتبطون بحسابك حالياً.</p>
+      </div>
+    </div>
+
+    <!-- Patient View Section -->
+    <div id="patient-network-section" class="custom-card" style="display:none;">
+      <h3 data-i18n="incomingRequests">طلبات المتابعة الواردة من الأطباء</h3>
+      <p style="font-size:12px; color:var(--text-secondary); margin-bottom:15px;" data-i18n="incomingRequestsSub">الأطباء الذين طلبوا الوصول لمتابعة علبتك الذكية وتعديل المواعيد</p>
+      <div id="patient-requests-list">
+        <p style="font-size:12px; color:var(--text-secondary);" data-i18n="noRequests">لا توجد طلبات جديدة.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 4: SETTINGS -->
+  <div class="page-tab" id="page-settings">
+    <div style="font-size:18px; font-weight:700; margin-bottom:15px;" data-i18n="settingsTitle">⚙️ إعدادات الحساب والنظام</div>
+    <div class="custom-card">
+      <p style="margin-bottom:8px;"><strong data-i18n="currentUsername">اسم المستخدم الحالي:</strong> <span id="stg-username">--</span></p>
+      <p><strong data-i18n="roleLabel">نوع الحساب:</strong> <span id="stg-role">--</span></p>
+    </div>
+  </div>
+
+</div>
+
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+  <button class="nav-item active" onclick="switchPage('dashboard', this)">
+    <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg> <span data-i18n="navHome">الرئيسية</span>
+  </button>
+  <button class="nav-item" onclick="switchPage('schedules', this)">
+    <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg> <span data-i18n="navSchedules">المواعيد</span>
+  </button>
+  <button class="nav-item" onclick="switchPage('network', this)">
+    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg> <span data-i18n="navNetwork">الربط الطبي</span>
+  </button>
+  <button class="nav-item" onclick="switchPage('settings', this)">
+    <svg viewBox="0 0 24 24"><path d="M12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6-3.6z"/></svg> <span data-i18n="navSettings">الإعدادات</span>
+  </button>
+</div>
+
+<script>
+  // Translations Dictionary
+  const translations = {
+    ar: {
+      login: "تسجيل الدخول",
+      newAccount: "حساب جديد",
+      username: "اسم المستخدم (Username)",
+      password: "كلمة السر",
+      loginBtn: "دخول",
+      fullname: "الاسم الكامل",
+      age: "العمر",
+      accountType: "نوع الحساب",
+      patient: "مريض",
+      doctor: "طبيب",
+      createAccount: "إنشاء حساب جديد",
+      logout: "خروج 🚪",
+      viewingPatient: "أنت تشاهد الآن بيانات المريض:",
+      rtcTime: "توقيت RTC",
+      adherenceRate: "معدل الالتزام",
+      nextDose: "الجرعة القادمة",
+      box1: "الخانة 01",
+      box2: "الخانة 02",
+      taken: "تم أخذها",
+      waiting: "في الانتظار",
+      chartTitle: "مخطط الالتزام بالجرعات",
+      scheduleTitle: "⏰ تعديل وجدولة الأدوية",
+      selectBox: "اختر الخانة",
+      medName: "اسم الدواء",
+      medTime: "الموعد",
+      saveChanges: "حفظ التغييرات 💾",
+      networkTitle: "🤝 شبكة المتابعة الطبية",
+      sendRequestTitle: "إرسال طلب متابعة لمريض",
+      sendRequestSub: "أدخل اسم المستخدم (Username) الخاص بالمريض لإرسال طلب ارتباط",
+      sendBtn: "إرسال طلب المتابعة",
+      acceptedPatientsList: "قائمة مرضياك المقبولين",
+      noPatients: "لا يوجد مرضى مرتبطون بحسابك حالياً.",
+      incomingRequests: "طلبات المتابعة الواردة من الأطباء",
+      incomingRequestsSub: "الأطباء الذين طلبوا الوصول لمتابعة علبتك الذكية وتعديل المواعيد",
+      noRequests: "لا توجد طلبات جديدة.",
+      settingsTitle: "⚙️ إعدادات الحساب والنظام",
+      currentUsername: "اسم المستخدم الحالي:",
+      roleLabel: "نوع الحساب:",
+      navHome: "الرئيسية",
+      navSchedules: "المواعيد",
+      navNetwork: "الربط الطبي",
+      navSettings: "الإعدادات",
+      chartLabels: ['السبت', 'الأحد', 'الإثنين', 'الثلاثاء', 'الخميس', 'اليوم']
+    },
+    en: {
+      login: "Login",
+      newAccount: "New Account",
+      username: "Username",
+      password: "Password",
+      loginBtn: "Sign In",
+      fullname: "Full Name",
+      age: "Age",
+      accountType: "Account Type",
+      patient: "Patient",
+      doctor: "Doctor",
+      createAccount: "Create New Account",
+      logout: "Logout 🚪",
+      viewingPatient: "Now viewing patient data:",
+      rtcTime: "RTC Time",
+      adherenceRate: "Adherence Rate",
+      nextDose: "Next Dose",
+      box1: "Box 01",
+      box2: "Box 02",
+      taken: "Taken",
+      waiting: "Waiting",
+      chartTitle: "Dose Adherence Chart",
+      scheduleTitle: "⏰ Edit & Schedule Medication",
+      selectBox: "Select Box",
+      medName: "Medicine Name",
+      medTime: "Time",
+      saveChanges: "Save Changes 💾",
+      networkTitle: "🤝 Medical Monitoring Network",
+      sendRequestTitle: "Send Monitoring Request to Patient",
+      sendRequestSub: "Enter patient username to send link request",
+      sendBtn: "Send Request",
+      acceptedPatientsList: "Accepted Patients List",
+      noPatients: "No patients currently linked to your account.",
+      incomingRequests: "Incoming Requests from Doctors",
+      incomingRequestsSub: "Doctors requesting access to monitor your smart box & update schedules",
+      noRequests: "No new requests.",
+      settingsTitle: "⚙️ Account & System Settings",
+      currentUsername: "Current Username:",
+      roleLabel: "Account Type:",
+      navHome: "Home",
+      navSchedules: "Schedule",
+      navNetwork: "Network",
+      navSettings: "Settings",
+      chartLabels: ['Sat', 'Sun', 'Mon', 'Tue', 'Thu', 'Today']
+    }
+  };
+
+  let currentLang = 'ar';
+  let currentTheme = 'dark';
+
+  // Toggle Language Function
+  function toggleLanguage() {
+    currentLang = currentLang === 'ar' ? 'en' : 'ar';
+    document.documentElement.lang = currentLang;
+    document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+    document.getElementById('lang-label').innerText = currentLang === 'ar' ? 'EN' : 'عربي';
+
+    // Update Text Elements
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (translations[currentLang][key]) {
+        el.innerText = translations[currentLang][key];
+      }
+    });
+
+    updateChartLabels();
+  }
+
+  // Toggle Theme Function
+  function toggleTheme() {
+    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    document.getElementById('theme-icon').innerText = currentTheme === 'dark' ? '🌙' : '☀️';
+  }
+
+  // Database Management
+  let usersDb = JSON.parse(localStorage.getItem('pillbox_users')) || [
+    { username: 'pat1', password: '123', fullname: 'أحمد المريض', age: 40, role: 'patient', requests: [], meds: {1: {name: 'بنادول Extra', time: '08:00'}, 2: {name: 'أوميجا 3', time: '14:00'}} },
+    { username: 'doc1', password: '123', fullname: 'د. خالد عبد الله', age: 45, role: 'doctor', patients: [] }
+  ];
+
+  let currentUser = null;
+  let activePatientData = null;
+
+  function saveDb() {
+    localStorage.setItem('pillbox_users', JSON.stringify(usersDb));
+  }
+
+  function toggleAuthMode(mode) {
+    document.getElementById('btn-tab-login').classList.toggle('active', mode === 'login');
+    document.getElementById('btn-tab-register').classList.toggle('active', mode === 'register');
+    document.getElementById('form-login').style.display = mode === 'login' ? 'block' : 'none';
+    document.getElementById('form-register').style.display = mode === 'register' ? 'block' : 'none';
+  }
+
+  function handleRegister(e) {
+    e.preventDefault();
+    const username = document.getElementById('reg-username').value.trim();
+    
+    if (usersDb.find(u => u.username === username)) {
+      alert(currentLang === 'ar' ? 'اسم المستخدم موجود بالفعل!' : 'Username already exists!');
+      return;
+    }
+
+    const newUser = {
+      fullname: document.getElementById('reg-fullname').value,
+      age: document.getElementById('reg-age').value,
+      role: document.getElementById('reg-role').value,
+      username: username,
+      password: document.getElementById('reg-password').value,
+      requests: [],
+      patients: [],
+      meds: {1: {name: 'بنادول', time: '08:00'}, 2: {name: 'فيتامين C', time: '12:00'}}
+    };
+
+    usersDb.push(newUser);
+    saveDb();
+    alert(currentLang === 'ar' ? 'تم إنشاء الحساب بنجاح!' : 'Account created successfully!');
+    toggleAuthMode('login');
+  }
+
+  function handleLogin(e) {
+    e.preventDefault();
+    const u = document.getElementById('login-username').value.trim();
+    const p = document.getElementById('login-password').value;
+
+    const user = usersDb.find(x => x.username === u && x.password === p);
+    if (!user) {
+      alert(currentLang === 'ar' ? 'اسم المستخدم أو كلمة السر غير صحيحة!' : 'Invalid username or password!');
+      return;
+    }
+
+    currentUser = user;
+    document.getElementById('auth-overlay').style.display = 'none';
+    initUserDashboard();
+  }
+
+  function logout() {
+    currentUser = null;
+    activePatientData = null;
+    document.getElementById('auth-overlay').style.display = 'flex';
+  }
+
+  function initUserDashboard() {
+    document.getElementById('user-display').innerText = `${currentUser.fullname} (${currentUser.role === 'doctor' ? (currentLang === 'ar' ? 'طبيب' : 'Doctor') : (currentLang === 'ar' ? 'مريض' : 'Patient')})`;
+    document.getElementById('stg-username').innerText = currentUser.username;
+    document.getElementById('stg-role').innerText = currentUser.role === 'doctor' ? (currentLang === 'ar' ? 'طبيب معالج' : 'Doctor') : (currentLang === 'ar' ? 'مريض' : 'Patient');
+
+    if (currentUser.role === 'doctor') {
+      document.getElementById('doctor-network-section').style.display = 'block';
+      document.getElementById('patient-network-section').style.display = 'none';
+      renderDoctorPatients();
+    } else {
+      document.getElementById('doctor-network-section').style.display = 'none';
+      document.getElementById('patient-network-section').style.display = 'block';
+      activePatientData = currentUser;
+      renderPatientRequests();
+      loadPatientMedsToUI();
+    }
+  }
+
+  function sendPatientRequest(e) {
+    e.preventDefault();
+    const targetUsername = document.getElementById('target-patient-username').value.trim();
+    const targetUser = usersDb.find(u => u.username === targetUsername && u.role === 'patient');
+
+    if (!targetUser) {
+      alert(currentLang === 'ar' ? 'اسم المستخدم غير موجود أو أنه ليس حساب مريض!' : 'User not found or is not a patient!');
+      return;
+    }
+
+    if (!targetUser.requests) targetUser.requests = [];
+    if (targetUser.requests.includes(currentUser.username)) {
+      alert(currentLang === 'ar' ? 'تم إرسال طلب لهذا المريض مسبقاً!' : 'Request already sent to this patient!');
+      return;
+    }
+
+    targetUser.requests.push(currentUser.username);
+    saveDb();
+    alert(currentLang === 'ar' ? `تم إرسال طلب المتابعة بنجاح إلى المريض (${targetUser.fullname})` : `Request sent successfully to (${targetUser.fullname})`);
+    document.getElementById('target-patient-username').value = '';
+  }
+
+  function renderPatientRequests() {
+    const list = document.getElementById('patient-requests-list');
+    list.innerHTML = '';
+    
+    if (!currentUser.requests || currentUser.requests.length === 0) {
+      list.innerHTML = `<p style="font-size:12px; color:var(--text-secondary);">${translations[currentLang].noRequests}</p>`;
+      return;
+    }
+
+    currentUser.requests.forEach(docUsername => {
+      const doc = usersDb.find(u => u.username === docUsername);
+      const div = document.createElement('div');
+      div.className = 'patient-card';
+      div.innerHTML = `
+        <div>
+          <strong>${doc ? doc.fullname : docUsername}</strong>
+          <p style="font-size:11px; color:var(--text-secondary);">${currentLang === 'ar' ? 'يطلب صلاحيات متابعة وتعديل العلبة الذكية' : 'Requests access to monitor & update smart box'}</p>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <button onclick="acceptRequest('${docUsername}')" class="btn-action" style="padding:6px 12px; font-size:12px;">${currentLang === 'ar' ? 'قبول' : 'Accept'}</button>
+        </div>
+      `;
+      list.appendChild(div);
+    });
+  }
+
+  function acceptRequest(docUsername) {
+    const doc = usersDb.find(u => u.username === docUsername);
+    if (doc) {
+      if (!doc.patients) doc.patients = [];
+      if (!doc.patients.includes(currentUser.username)) doc.patients.push(currentUser.username);
+    }
+
+    currentUser.requests = currentUser.requests.filter(u => u !== docUsername);
+    saveDb();
+    alert(currentLang === 'ar' ? 'تم قبول طلب الطبيب بنجاح!' : 'Doctor request accepted successfully!');
+    renderPatientRequests();
+  }
+
+  function renderDoctorPatients() {
+    const list = document.getElementById('doctor-patients-list');
+    list.innerHTML = '';
+
+    if (!currentUser.patients || currentUser.patients.length === 0) {
+      list.innerHTML = `<p style="font-size:12px; color:var(--text-secondary);">${translations[currentLang].noPatients}</p>`;
+      return;
+    }
+
+    currentUser.patients.forEach(patUsername => {
+      const pat = usersDb.find(u => u.username === patUsername);
+      if (pat) {
+        const div = document.createElement('div');
+        div.className = 'patient-card';
+        div.innerHTML = `
+          <div>
+            <strong>${pat.fullname} (${currentLang === 'ar' ? 'العمر' : 'Age'}: ${pat.age})</strong>
+            <p style="font-size:11px; color:var(--text-secondary);">@${pat.username}</p>
+          </div>
+          <button onclick="inspectPatient('${pat.username}')" class="btn-action" style="padding:6px 12px; font-size:12px;">${currentLang === 'ar' ? 'عرض اللوحة وتعديل المواعيد' : 'View Dashboard & Edit'}</button>
+        `;
+        list.appendChild(div);
+      }
+    });
+  }
+
+  function inspectPatient(patUsername) {
+    const pat = usersDb.find(u => u.username === patUsername);
+    activePatientData = pat;
+    document.getElementById('patient-view-header').style.display = 'block';
+    document.getElementById('viewing-patient-name').innerText = pat.fullname;
+    loadPatientMedsToUI();
+    switchPage('dashboard', document.querySelectorAll('.nav-item')[0]);
+  }
+
+  function loadPatientMedsToUI() {
+    if (!activePatientData || !activePatientData.meds) return;
+    document.getElementById('med-name-1').innerText = activePatientData.meds[1].name;
+    document.getElementById('med-name-2').innerText = activePatientData.meds[2].name;
+  }
+
+  function updateSchedule() {
+    if (!activePatientData) {
+      alert(currentLang === 'ar' ? 'يرجى اختيار مريض أولاً للتعديل عليه!' : 'Please select a patient first!');
+      return;
+    }
+    const boxId = document.getElementById('sched-box').value;
+    const name = document.getElementById('sched-name').value;
+    const time = document.getElementById('sched-time').value;
+
+    activePatientData.meds[boxId] = { name: name, time: time };
+    saveDb();
+    loadPatientMedsToUI();
+    alert(currentLang === 'ar' ? 'تم تحديث الموعد بنجاح!' : 'Schedule updated successfully!');
+    switchPage('dashboard', document.querySelectorAll('.nav-item')[0]);
+  }
+
+  function switchPage(pageId, navBtn) {
+    document.querySelectorAll('.page-tab').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('page-' + pageId).classList.add('active');
+    navBtn.classList.add('active');
+  }
+
+  setInterval(() => {
+    document.getElementById('rtc-time').innerText = new Date().toTimeString().substring(0, 5);
+  }, 1000);
+
+  // Chart Initialization
+  const ctx = document.getElementById('adherenceChart').getContext('2d');
+  let adherenceChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: translations[currentLang].chartLabels,
+      datasets: [{ label: '%', data: [70, 85, 90, 80, 95, 85], borderColor: '#38bdf8', fill: false, tension: 0.3 }]
+    },
+    options: { responsive: true, plugins: { legend: { display: false } } }
+  });
+
+  function updateChartLabels() {
+    adherenceChart.data.labels = translations[currentLang].chartLabels;
+    adherenceChart.update();
+  }
+</script>
+</body>
+</html>
