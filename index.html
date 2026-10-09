@@ -1,228 +1,17 @@
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nura Box - Smart Care Smarter Life</title>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nura Box - Smart Care Smarter Life</title>
 
-<style>
-  :root {
-    --bg-gradient: radial-gradient(circle at 50% top, #1e293b 0%, #0f172a 100%);
-    --bg: #0f172a;
-    --header-bg: rgba(15, 23, 42, 0.75);
-    --card-bg: rgba(30, 41, 59, 0.65);
-    --card-border: rgba(255, 255, 255, 0.1);
-    --card-border-glow: rgba(56, 189, 248, 0.25);
-    --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    --accent-blue: #38bdf8;
-    --accent-indigo: #6366f1;
-    --success: #10b981;
-    --warning: #f59e0b;
-    --danger: #ef4444;
-    --radius-lg: 24px;
-    --radius-md: 16px;
-    --radius-sm: 12px;
-    --bottom-nav-bg: rgba(15, 23, 42, 0.85);
-    --glass-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-  }
-
-  [data-theme="light"] {
-    --bg-gradient: linear-gradient(135deg, #e0f2fe 0%, #f8fafc 50%, #f1f5f9 100%);
-    --bg: #f8fafc;
-    --header-bg: rgba(255, 255, 255, 0.8);
-    --card-bg: rgba(255, 255, 255, 0.85);
-    --card-border: rgba(0, 0, 0, 0.08);
-    --text-primary: #0f172a;
-    --text-secondary: #64748b;
-    --accent-blue: #0284c7;
-    --accent-indigo: #4f46e5;
-    --bottom-nav-bg: rgba(255, 255, 255, 0.9);
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', sans-serif; transition: background 0.25s, border-color 0.25s; }
-  body { background: var(--bg-gradient); color: var(--text-primary); min-height: 100vh; padding-bottom: 100px; }
-
-  /* LANDING */
-  #landing-page { position: fixed; inset: 0; z-index: 2000; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 30px 20px; background: url('https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=2070&auto=format&fit=crop') no-repeat center center/cover; overflow: hidden; }
-  #landing-page.hidden { display: none; }
-  .landing-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(15, 23, 42, 0.65), rgba(14, 116, 144, 0.45)); z-index: 1; }
-  .landing-content { position: relative; z-index: 2; width: 100%; max-width: 1100px; height: 100%; display: flex; flex-direction: column; justify-content: space-between; align-items: center; }
-  .landing-logo { display: flex; align-items: center; gap: 12px; color: #fff; }
-  .landing-logo-icon { width: 48px; height: 48px; background: linear-gradient(135deg, #0284c7, #38bdf8); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; color: white; }
-  .landing-logo-text { font-size: 28px; font-weight: 900; color: #fff; }
-  .main-hero { text-align: center; color: #fff; max-width: 780px; margin: auto 0; }
-  .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.25); border: 1px solid rgba(255,255,255,0.4); padding: 8px 20px; border-radius: 50px; font-size: 14px; font-weight: 800; color: #fff; margin-bottom: 24px; }
-  .main-hero h1 { font-size: 52px; font-weight: 900; line-height: 1.25; margin-bottom: 20px; }
-  .main-hero h1 span { color: #38bdf8; }
-  .main-hero p { font-size: 19px; line-height: 1.7; color: #f1f5f9; margin-bottom: 36px; }
-  .features-pills { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 38px; }
-  .feature-pill { background: rgba(15,23,42,0.65); border: 1px solid rgba(255,255,255,0.3); padding: 10px 20px; border-radius: 14px; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 10px; color: #fff; }
-  .btn-start { display: inline-flex; align-items: center; gap: 12px; background: linear-gradient(135deg, #0284c7, #2563eb); color: #fff; font-size: 18px; font-weight: 800; padding: 16px 44px; border-radius: 50px; cursor: pointer; border: none; }
-  .btn-start:hover { transform: translateY(-3px); }
-  .landing-footer { position: relative; z-index: 2; color: #e2e8f0; font-size: 13px; }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-  /* APP */
-  .date-bar { background: linear-gradient(90deg, rgba(99,102,241,0.15), rgba(56,189,248,0.2)); border-bottom: 1px solid var(--card-border); text-align: center; padding: 8px 16px; font-size: 13px; font-weight: 700; color: var(--accent-blue); }
-  header { background: var(--header-bg); backdrop-filter: blur(20px); border-bottom: 1px solid var(--card-border); position: sticky; top: 0; z-index: 50; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-  .brand { display: flex; align-items: center; gap: 12px; }
-  .brand-logo { width: 44px; height: 44px; background: linear-gradient(135deg, var(--accent-indigo), var(--accent-blue)); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 900; color: #fff; }
-  .brand-text h1 { font-size: 18px; font-weight: 900; }
-  .brand-text p { font-size: 11px; color: var(--accent-blue); font-weight: 700; }
-  .header-right { display: flex; align-items: center; gap: 10px; position: relative; }
-  .header-actions { display: flex; align-items: center; gap: 8px; }
-  .ctrl-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--card-border); color: var(--text-primary); padding: 8px 12px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; height: 40px; }
-  .ctrl-btn:hover { background: rgba(255,255,255,0.12); }
-  .notif-badge { position: absolute; top: -4px; right: -4px; background: var(--danger); color: white; font-size: 10px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; }
-  .notif-dropdown { display: none; position: absolute; top: 52px; left: 0; width: 300px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-md); padding: 16px; z-index: 100; }
-  .notif-dropdown.show { display: block; }
-  .notif-item { padding: 10px 0; border-bottom: 1px solid var(--card-border); font-size: 13px; }
-  .user-badge { background: rgba(255,255,255,0.05); border: 1px solid var(--card-border); padding: 6px 12px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 8px; height: 40px; }
-  .btn-logout { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: var(--danger); padding: 4px 8px; border-radius: 8px; cursor: pointer; font-size: 12px; }
-
-  /* AUTH */
-  .auth-overlay { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; background: linear-gradient(rgba(15,23,42,0.8), rgba(15,23,42,0.9)), url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1600&q=85') center/cover; }
-  .auth-overlay.hidden { display: none; }
-  .auth-card { background: var(--card-bg); border: 1px solid var(--card-border); padding: 32px 28px; border-radius: var(--radius-lg); width: 100%; max-width: 440px; }
-  .auth-header { text-align: center; margin-bottom: 24px; }
-  .auth-header h2 { font-size: 28px; font-weight: 900; }
-  .auth-header p { font-size: 13px; color: var(--accent-blue); font-weight: 700; margin-top: 4px; }
-  .auth-toggle { display: flex; background: rgba(0,0,0,0.2); padding: 4px; border-radius: var(--radius-md); margin-bottom: 24px; border: 1px solid var(--card-border); }
-  .auth-toggle button { flex: 1; padding: 10px; border: none; background: none; color: var(--text-secondary); border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 14px; }
-  .auth-toggle button.active { background: linear-gradient(135deg, var(--accent-indigo), var(--accent-blue)); color: white; }
-
-  .form-row { display: flex; gap: 12px; }
-  .form-row .form-group { flex: 1; }
-  .form-group { margin-bottom: 16px; }
-  .form-group label { display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; font-weight: 700; }
-  .form-control { width: 100%; background: rgba(15,23,42,0.6); border: 1px solid var(--card-border); color: var(--text-primary); padding: 12px 14px; border-radius: var(--radius-sm); font-size: 14px; outline: none; }
-  .form-control:focus { border-color: var(--accent-blue); }
-  .btn-action { width: 100%; background: linear-gradient(135deg, var(--accent-indigo), var(--accent-blue)); color: white; border: none; padding: 14px; border-radius: var(--radius-sm); font-size: 15px; font-weight: 800; cursor: pointer; margin-top: 8px; }
-
-  .container { max-width: 940px; margin: 24px auto; padding: 0 16px; }
-  .page-tab { display: none; }
-  .page-tab.active { display: block; }
-  .custom-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 20px; }
-
-  /* ESP32 CONFIG BAR */
-  .esp-config-bar { background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.3); border-radius: var(--radius-md); padding: 12px 16px; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-  .esp-config-bar input { flex: 1; min-width: 150px; background: rgba(15,23,42,0.6); border: 1px solid var(--card-border); color: var(--text-primary); padding: 8px 12px; border-radius: 8px; font-size: 13px; }
-  .esp-config-bar button { padding: 8px 16px; border-radius: 8px; border: none; background: linear-gradient(135deg, var(--accent-indigo), var(--accent-blue)); color: white; font-weight: 700; font-size: 13px; cursor: pointer; }
-  .esp-status { font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 12px; }
-  .esp-status.connected { background: rgba(16,185,129,0.2); color: var(--success); }
-  .esp-status.disconnected { background: rgba(239,68,68,0.2); color: var(--danger); }
-
-  /* DASHBOARD */
-  .hw-status-banner { background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(56,189,248,0.15)); border: 1px solid rgba(16,185,129,0.35); border-radius: var(--radius-md); padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; }
-  .hw-status-item { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 800; }
-  .pulse-dot { width: 12px; height: 12px; background: var(--success); border-radius: 50%; animation: pulse 1.5s infinite; }
-  .pulse-dot.offline { background: var(--danger); animation: none; }
-  @keyframes pulse { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
-
-  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
-  .kpi-card { background: var(--card-bg); border: 1px solid var(--card-border); padding: 20px; border-radius: var(--radius-lg); position: relative; }
-  .kpi-card::before { content:''; position: absolute; top:0; right:0; width: 5px; height:100%; background: linear-gradient(180deg, var(--accent-blue), var(--accent-indigo)); }
-  .kpi-header { font-size: 13px; color: var(--text-secondary); margin-bottom: 10px; display: flex; justify-content: space-between; font-weight: 700; }
-  .kpi-value { font-size: 28px; font-weight: 900; }
-  .adherence-bar-container { background: rgba(255,255,255,0.08); border-radius: 10px; height: 10px; margin-top: 12px; overflow: hidden; }
-  .adherence-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent-indigo), var(--accent-blue)); width: 0%; transition: width 0.8s; }
-
-  .boxes-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-bottom: 24px; }
-  @media(max-width: 640px) { .boxes-grid { grid-template-columns: 1fr; } }
-  .box-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-lg); padding: 22px; }
-  .box-card.taken { border-color: rgba(16,185,129,0.4); background: rgba(16,185,129,0.06); }
-  .box-card.waiting { border-color: rgba(245,158,11,0.4); background: rgba(245,158,11,0.06); }
-  .box-card.empty { opacity: 0.65; }
-  .box-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-  .box-title { font-size: 13px; font-weight: 800; color: var(--text-secondary); }
-  .box-badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 800; }
-  .taken .box-badge { background: rgba(16,185,129,0.2); color: var(--success); }
-  .waiting .box-badge { background: rgba(245,158,11,0.2); color: var(--warning); }
-  .empty .box-badge { background: rgba(255,255,255,0.1); color: var(--text-secondary); }
-  .medicine-name { font-size: 20px; font-weight: 900; margin-bottom: 6px; }
-  .medicine-time { font-size: 14px; color: var(--accent-blue); font-weight: 800; margin-bottom: 16px; }
-  .btn-take-dose { width: 100%; padding: 10px; border-radius: var(--radius-sm); border: none; background: linear-gradient(135deg, var(--accent-indigo), var(--accent-blue)); color: white; font-weight: 800; font-size: 13px; cursor: pointer; }
-  .btn-take-dose.done { background: rgba(16,185,129,0.2); color: var(--success); cursor: default; }
-
-  .quick-actions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px; }
-  .action-btn-card { background: var(--card-bg); border: 1px solid var(--card-border); padding: 16px; border-radius: var(--radius-md); text-align: center; cursor: pointer; }
-  .action-btn-card:hover { border-color: var(--accent-blue); transform: translateY(-3px); }
-  .action-icon { font-size: 24px; margin-bottom: 6px; }
-  .action-label { font-size: 13px; font-weight: 800; }
-
-  .sched-overview-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 22px; }
-  .sched-overview-card { background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); padding: 14px; border-radius: var(--radius-md); text-align: center; }
-  .sched-overview-num { font-size: 20px; font-weight: 900; color: var(--accent-blue); }
-  .sched-overview-lbl { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
-  .sched-list-card { background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: var(--radius-md); padding: 18px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
-  .sched-list-card.active-slot { border-right: 5px solid var(--accent-blue); }
-  .sched-list-card.empty-slot { opacity: 0.6; border-right: 5px solid var(--text-secondary); }
-  .sched-info-main h4 { font-size: 16px; font-weight: 800; margin-bottom: 6px; }
-  .sched-info-main p { font-size: 13px; color: var(--accent-blue); font-weight: 700; }
-  .sched-pill-tag { font-size: 11px; background: rgba(99,102,241,0.2); color: var(--accent-indigo); padding: 3px 10px; border-radius: 12px; font-weight: 800; margin-top: 8px; display: inline-block; }
-  .sched-actions { display: flex; gap: 8px; }
-  .btn-sched-action { border: 1px solid var(--card-border); background: rgba(255,255,255,0.06); color: var(--text-primary); padding: 8px 14px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 700; cursor: pointer; }
-  .btn-sched-del { color: var(--danger); border-color: rgba(239,68,68,0.3); background: rgba(239,68,68,0.1); }
-
-  .report-status-badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 800; }
-  .rep-badge-reviewed { background: rgba(16,185,129,0.2); color: var(--success); }
-  .rep-badge-pending { background: rgba(245,158,11,0.2); color: var(--warning); }
-  .report-history-card { background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: var(--radius-md); padding: 18px; margin-bottom: 14px; }
-  .doc-reply-box { background: rgba(56,189,248,0.1); border-right: 4px solid var(--accent-blue); padding: 12px 16px; border-radius: 10px; margin-top: 12px; font-size: 13px; }
-
-  .net-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 22px; }
-  .net-stat-card { background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); padding: 16px; border-radius: var(--radius-md); text-align: center; }
-  .net-stat-num { font-size: 22px; font-weight: 900; color: var(--accent-blue); }
-  .net-stat-label { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
-  .net-card { background: rgba(255,255,255,0.04); border: 1px solid var(--card-border); border-radius: var(--radius-md); padding: 18px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 14px; }
-  .net-card-header { display: flex; justify-content: space-between; align-items: center; }
-  .net-user-info { display: flex; align-items: center; gap: 14px; }
-  .net-avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-indigo), var(--accent-blue)); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 900; color: white; }
-  .net-user-details h4 { font-size: 16px; font-weight: 800; }
-  .net-user-details p { font-size: 12px; color: var(--accent-blue); }
-  .net-status-badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 800; }
-  .status-active { background: rgba(16,185,129,0.15); color: var(--success); }
-  .status-pending { background: rgba(245,158,11,0.15); color: var(--warning); }
-  .net-actions { display: flex; gap: 10px; }
-  .net-btn { flex: 1; padding: 10px 14px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 800; border: none; cursor: pointer; }
-  .btn-primary-net { background: linear-gradient(135deg, var(--accent-indigo), var(--accent-blue)); color: white; }
-  .btn-danger-net { background: rgba(239,68,68,0.15); color: var(--danger); }
-
-  .stg-profile-banner { display: flex; align-items: center; gap: 18px; padding: 20px; background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(56,189,248,0.15)); border: 1px solid var(--card-border); border-radius: var(--radius-md); margin-bottom: 22px; }
-  .stg-avatar-large { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-indigo), var(--accent-blue)); display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 900; color: white; }
-  .stg-role-tag { display: inline-block; padding: 3px 12px; border-radius: 12px; font-size: 11px; font-weight: 800; background: rgba(56,189,248,0.2); color: var(--accent-blue); margin-top: 6px; }
-  .stg-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--card-border); }
-  .stg-info h4 { font-size: 15px; font-weight: 800; }
-  .stg-info p { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
-
-  .switch { position: relative; display: inline-block; width: 48px; height: 26px; }
-  .switch input { opacity: 0; width: 0; height: 0; }
-  .slider { position: absolute; cursor: pointer; inset: 0; background-color: rgba(255,255,255,0.15); transition: .3s; border-radius: 26px; border: 1px solid var(--card-border); }
-  .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 2px; background-color: white; transition: .3s; border-radius: 50%; }
-  input:checked + .slider { background-color: var(--accent-indigo); }
-  input:checked + .slider:before { transform: translateX(21px); }
-  .danger-zone { border: 1px solid rgba(239,68,68,0.3); background: rgba(239,68,68,0.04); }
-
-  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bottom-nav-bg); backdrop-filter: blur(20px); border-top: 1px solid var(--card-border); display: flex; justify-content: space-around; padding: 12px 0 16px 0; z-index: 100; }
-  .nav-item { border: none; background: none; color: var(--text-secondary); font-size: 11px; font-weight: 700; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; width: 20%; }
-  .nav-item.active { color: var(--accent-blue); font-weight: 800; transform: translateY(-3px); }
-  .nav-item svg { width: 24px; height: 24px; fill: currentColor; }
-
-  @media (max-width: 768px) {
-    .main-hero h1 { font-size: 34px; }
-    .main-hero p { font-size: 16px; }
-    .sched-overview-grid { grid-template-columns: repeat(2, 1fr); }
-    .net-stats { grid-template-columns: 1fr; }
-  }
-</style>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- LANDING -->
+<!-- ==================== LANDING ==================== -->
 <div id="landing-page">
   <div class="landing-overlay"></div>
   <div class="landing-content">
@@ -236,11 +25,11 @@
       <h1>علبة الأدوية الذكية <span>Nura Box</span></h1>
       <p>نظام مدمج يضمن تنبيهك بمواعيد أدويتك بدقة، ويتابع التزامك اليومي، مع ربط مباشر مع الطبيب المعالج للحفاظ على سلامتك وسلامة عائلتك.</p>
       <div class="features-pills">
-        <div class="feature-pill"><i class="fa-solid fa-bell" style="color: #38bdf8;"></i> تنبيهات صوتية وضوئية</div>
-        <div class="feature-pill"><i class="fa-solid fa-user-doctor" style="color: #38bdf8;"></i> متابعة مباشرة مع الطبيب</div>
-        <div class="feature-pill"><i class="fa-solid fa-chart-line" style="color: #38bdf8;"></i> تقارير التزام دقيقة</div>
+        <div class="feature-pill"><i class="fa-solid fa-bell"></i> تنبيهات صوتية وضوئية</div>
+        <div class="feature-pill"><i class="fa-solid fa-user-doctor"></i> متابعة مباشرة مع الطبيب</div>
+        <div class="feature-pill"><i class="fa-solid fa-chart-line"></i> تقارير التزام دقيقة</div>
       </div>
-      <button class="btn-start" onclick="goToAuth()">
+      <button class="btn-start" onclick="App.goToAuth()">
         <span>سجل الآن</span>
         <i class="fa-solid fa-arrow-left"></i>
       </button>
@@ -250,13 +39,13 @@
   </div>
 </div>
 
-<!-- APP -->
+<!-- ==================== DATE BAR ==================== -->
 <div class="date-bar" id="current-date-display">...</div>
 
-<!-- AUTH -->
+<!-- ==================== AUTH ==================== -->
 <div class="auth-overlay hidden" id="auth-overlay">
   <div class="auth-card">
-    <button onclick="backToLanding()" style="background:none; border:none; color:var(--text-secondary); cursor:pointer; font-size:13px; font-weight:700; margin-bottom:12px;">
+    <button onclick="App.backToLanding()" class="btn-back-landing">
       <i class="fa-solid fa-arrow-right"></i> العودة للصفحة الرئيسية
     </button>
     <div class="auth-header">
@@ -264,11 +53,11 @@
       <p>Smart Care Smarter Life</p>
     </div>
     <div class="auth-toggle">
-      <button id="btn-tab-login" class="active" onclick="toggleAuthMode('login')">تسجيل الدخول</button>
-      <button id="btn-tab-register" onclick="toggleAuthMode('register')">حساب جديد</button>
+      <button id="btn-tab-login" class="active" onclick="App.toggleAuthMode('login')">تسجيل الدخول</button>
+      <button id="btn-tab-register" onclick="App.toggleAuthMode('register')">حساب جديد</button>
     </div>
 
-    <form id="form-login" onsubmit="handleLogin(event)">
+    <form id="form-login" onsubmit="App.handleLogin(event)">
       <div class="form-group">
         <label>اسم المستخدم</label>
         <input type="text" id="login-username" class="form-control" required>
@@ -280,7 +69,7 @@
       <button type="submit" class="btn-action">دخول</button>
     </form>
 
-    <form id="form-register" style="display:none;" onsubmit="handleRegister(event)">
+    <form id="form-register" style="display:none;" onsubmit="App.handleRegister(event)">
       <div class="form-group">
         <label>الاسم الكامل</label>
         <input type="text" id="reg-fullname" class="form-control" required>
@@ -311,7 +100,7 @@
   </div>
 </div>
 
-<!-- HEADER -->
+<!-- ==================== HEADER ==================== -->
 <header id="app-header" style="display:none;">
   <div class="brand">
     <div class="brand-logo">NB</div>
@@ -322,46 +111,47 @@
   </div>
   <div class="header-right">
     <div class="header-actions">
-      <button class="ctrl-btn" onclick="toggleNotifDropdown()">
+      <button class="ctrl-btn" onclick="App.toggleNotifDropdown()">
         <span>🔔</span>
         <span class="notif-badge" id="notif-count">0</span>
       </button>
-      <button class="ctrl-btn" onclick="toggleLanguage()">
+      <button class="ctrl-btn" onclick="App.toggleLanguage()">
         <span>🌐</span>
         <span id="lang-label">EN</span>
       </button>
-      <button class="ctrl-btn" onclick="toggleTheme()">
+      <button class="ctrl-btn" onclick="App.toggleTheme()">
         <span id="theme-icon">🌙</span>
       </button>
     </div>
     <div class="user-badge">
       <span id="user-display">المستخدم</span>
-      <button class="btn-logout" onclick="logout()">🚪</button>
+      <button class="btn-logout" onclick="App.logout()">🚪</button>
     </div>
     <div class="notif-dropdown" id="notif-dropdown">
-      <div style="font-weight:800; margin-bottom:10px; border-bottom:1px solid var(--card-border); padding-bottom:8px;">الإشعارات</div>
+      <div class="notif-title">الإشعارات</div>
       <div id="notif-items-container">
-        <div class="notif-item" style="color:var(--text-secondary);">لا توجد إشعارات جديدة</div>
+        <div class="notif-item">لا توجد إشعارات جديدة</div>
       </div>
     </div>
   </div>
 </header>
 
+<!-- ==================== APP CONTAINER ==================== -->
 <div class="container" id="app-container" style="display:none;">
 
-  <!-- DASHBOARD -->
+  <!-- ========== DASHBOARD ========== -->
   <div class="page-tab active" id="page-dashboard">
-    <!-- ESP32 CONFIG BAR -->
     <div class="esp-config-bar">
-      <span style="font-size:13px; font-weight:800;">📡 ESP32 IP:</span>
+      <span class="esp-label">📡 ESP32 IP:</span>
       <input type="text" id="esp-ip-input" placeholder="192.168.1.50" value="192.168.1.50">
-      <button onclick="saveEspIp()">حفظ</button>
-      <button onclick="testEspConnection()">اختبار</button>
+      <button onclick="Api.saveEspIp()">حفظ</button>
+      <button onclick="Api.testEspConnection()">اختبار</button>
       <span class="esp-status disconnected" id="esp-status">غير متصل</span>
     </div>
 
-    <div id="patient-view-header" style="display:none; background:rgba(99,102,241,0.15); padding:14px 18px; border-radius:var(--radius-md); margin-bottom:18px; border:1px solid var(--accent-indigo);">
-      👁 <strong>أنت تشاهد الآن بيانات المريض:</strong> <span id="viewing-patient-name" style="color:var(--accent-blue); font-weight:800;">--</span>
+    <div id="patient-view-header" class="patient-view-header" style="display:none;">
+      👁 <strong>أنت تشاهد الآن بيانات المريض:</strong>
+      <span id="viewing-patient-name" class="patient-name-highlight">--</span>
     </div>
 
     <div class="hw-status-banner">
@@ -369,8 +159,8 @@
         <div class="pulse-dot" id="hw-pulse"></div>
         <span id="hw-status-text">العلبة الذكية متصلة (ESP32-WiFi)</span>
       </div>
-      <div class="hw-status-item" style="color:var(--text-secondary);">
-        🔋 البطارية: <strong style="color:var(--success);">94%</strong>
+      <div class="hw-status-item secondary">
+        🔋 البطارية: <strong class="battery-ok">94%</strong>
       </div>
     </div>
 
@@ -386,66 +176,40 @@
       </div>
       <div class="kpi-card">
         <div class="kpi-header"><span>الجرعة القادمة</span> ⌛</div>
-        <div class="kpi-value" id="next-dose-val" style="font-size:22px; color:var(--accent-blue);">--:--</div>
+        <div class="kpi-value next-dose" id="next-dose-val">--:--</div>
       </div>
     </div>
 
     <div class="quick-actions-grid">
-      <div class="action-btn-card" onclick="triggerBuzzerTest()">
+      <div class="action-btn-card" onclick="Api.triggerBuzzerTest()">
         <div class="action-icon">🔊</div>
         <div class="action-label">اختبار التنبيه</div>
       </div>
-      <div class="action-btn-card" onclick="syncHardwareTime()">
+      <div class="action-btn-card" onclick="Api.syncHardwareTime()">
         <div class="action-icon">🔄</div>
         <div class="action-label">تزامن الوقت</div>
       </div>
-      <div class="action-btn-card" onclick="switchPage('schedules', document.querySelectorAll('.nav-item')[2])">
+      <div class="action-btn-card" onclick="App.switchPage('schedules', document.querySelectorAll('.nav-item')[2])">
         <div class="action-icon">➕</div>
         <div class="action-label">إضافة دواء</div>
       </div>
     </div>
 
-    <div style="font-size:18px; font-weight:900; margin-bottom:14px;">💊 الخانات والأدوية اليومية</div>
-
-    <div class="boxes-grid">
-      <div class="box-card empty" id="box-1">
-        <div class="box-top"><span class="box-title">📦 الخانة 01</span><span class="box-badge" id="badge-1">فارغ</span></div>
-        <div class="medicine-name" id="med-name-1">--</div>
-        <div class="medicine-time" id="med-time-1">⏰ --:--</div>
-        <button class="btn-take-dose" id="btn-dose-1" onclick="markDoseTaken(1)">تأكيد أخذ الجرعة ✅</button>
-      </div>
-      <div class="box-card empty" id="box-2">
-        <div class="box-top"><span class="box-title">📦 الخانة 02</span><span class="box-badge" id="badge-2">فارغ</span></div>
-        <div class="medicine-name" id="med-name-2">--</div>
-        <div class="medicine-time" id="med-time-2">⏰ --:--</div>
-        <button class="btn-take-dose" id="btn-dose-2" onclick="markDoseTaken(2)">تأكيد أخذ الجرعة ✅</button>
-      </div>
-      <div class="box-card empty" id="box-3">
-        <div class="box-top"><span class="box-title">📦 الخانة 03</span><span class="box-badge" id="badge-3">فارغ</span></div>
-        <div class="medicine-name" id="med-name-3">--</div>
-        <div class="medicine-time" id="med-time-3">⏰ --:--</div>
-        <button class="btn-take-dose" id="btn-dose-3" onclick="markDoseTaken(3)">تأكيد أخذ الجرعة ✅</button>
-      </div>
-      <div class="box-card empty" id="box-4">
-        <div class="box-top"><span class="box-title">📦 الخانة 04</span><span class="box-badge" id="badge-4">فارغ</span></div>
-        <div class="medicine-name" id="med-name-4">--</div>
-        <div class="medicine-time" id="med-time-4">⏰ --:--</div>
-        <button class="btn-take-dose" id="btn-dose-4" onclick="markDoseTaken(4)">تأكيد أخذ الجرعة ✅</button>
-      </div>
-    </div>
+    <div class="section-title">💊 الخانات والأدوية اليومية</div>
+    <div class="boxes-grid" id="boxes-grid"></div>
 
     <div class="custom-card">
-      <div style="font-size:16px; font-weight:800; margin-bottom:16px;">مخطط الالتزام الأسبوعي</div>
+      <div class="chart-title">مخطط الالتزام الأسبوعي</div>
       <canvas id="adherenceChart" height="120"></canvas>
     </div>
   </div>
 
-  <!-- REPORT -->
+  <!-- ========== REPORTS ========== -->
   <div class="page-tab" id="page-report">
     <div id="patient-report-form">
       <div class="custom-card">
-        <h3 style="margin-bottom:8px; font-weight:900;">📝 التقرير الطبي</h3>
-        <form onsubmit="submitWeeklyReport(event)">
+        <h3 class="card-title">📝 التقرير الطبي</h3>
+        <form onsubmit="App.submitWeeklyReport(event)">
           <div class="form-group">
             <label>كيف كان شعورك هذا الأسبوع؟</label>
             <select id="report-health-status" class="form-control">
@@ -476,42 +240,54 @@
         </form>
       </div>
       <div class="custom-card">
-        <h3 style="font-size:16px; font-weight:800; margin-bottom:14px;">📚 سجل التقارير</h3>
-        <div id="patient-report-history"><p style="font-size:13px; color:var(--text-secondary);">لا توجد تقارير.</p></div>
+        <h3 class="card-title-sm">📚 سجل التقارير</h3>
+        <div id="patient-report-history"></div>
       </div>
     </div>
 
     <div id="doctor-report-review" style="display:none;">
       <div class="custom-card">
-        <h3 style="margin-bottom:8px; font-weight:900;">🩺 مراجعة التقارير</h3>
+        <h3 class="card-title">🩺 مراجعة التقارير</h3>
         <div id="reports-list-container"></div>
       </div>
     </div>
   </div>
 
-  <!-- SCHEDULES -->
+  <!-- ========== SCHEDULES ========== -->
   <div class="page-tab" id="page-schedules">
-    <div style="font-size:22px; font-weight:900; margin-bottom:18px;">⏰ إدارة الأدوية</div>
+    <div class="page-title">⏰ إدارة الأدوية</div>
 
     <div class="sched-overview-grid">
-      <div class="sched-overview-card"><div class="sched-overview-num" id="sched-active-cnt">0/4</div><div class="sched-overview-lbl">خانات نشطة</div></div>
-      <div class="sched-overview-card"><div class="sched-overview-num" id="sched-next-time" style="font-size:16px;">--:--</div><div class="sched-overview-lbl">الجرعة القادمة</div></div>
-      <div class="sched-overview-card"><div class="sched-overview-num" style="color:var(--success);">مفعّل</div><div class="sched-overview-lbl">التنبيه</div></div>
-      <div class="sched-overview-card"><div class="sched-overview-num" style="color:var(--accent-blue);">NTP</div><div class="sched-overview-lbl">الساعة</div></div>
+      <div class="sched-overview-card">
+        <div class="sched-overview-num" id="sched-active-cnt">0/4</div>
+        <div class="sched-overview-lbl">خانات نشطة</div>
+      </div>
+      <div class="sched-overview-card">
+        <div class="sched-overview-num sm" id="sched-next-time">--:--</div>
+        <div class="sched-overview-lbl">الجرعة القادمة</div>
+      </div>
+      <div class="sched-overview-card">
+        <div class="sched-overview-num success">مفعّل</div>
+        <div class="sched-overview-lbl">التنبيه</div>
+      </div>
+      <div class="sched-overview-card">
+        <div class="sched-overview-num accent">NTP</div>
+        <div class="sched-overview-lbl">الساعة</div>
+      </div>
     </div>
 
     <div class="custom-card">
-      <h3 style="font-size:16px; font-weight:800; margin-bottom:16px;">📋 الجدول الحالي</h3>
+      <h3 class="card-title-sm">📋 الجدول الحالي</h3>
       <div id="schedule-slots-container"></div>
     </div>
 
     <div class="custom-card" id="schedule-form-card">
-      <h3 style="font-size:16px; font-weight:800; margin-bottom:14px;">⚙️ إضافة / تعديل جرعة</h3>
-      <form onsubmit="event.preventDefault(); saveAdvancedSchedule();">
+      <h3 class="card-title-sm">⚙️ إضافة / تعديل جرعة</h3>
+      <form onsubmit="App.saveSchedule(event)">
         <div class="form-row">
           <div class="form-group">
             <label>اختر الخانة</label>
-            <select class="form-control" id="sched-box" onchange="loadSelectedBoxToForm()">
+            <select class="form-control" id="sched-box" onchange="App.loadSelectedToForm()">
               <option value="1">الخانة 01</option>
               <option value="2">الخانة 02</option>
               <option value="3">الخانة 03</option>
@@ -541,837 +317,134 @@
             </select>
           </div>
         </div>
-        <div style="display:flex; gap:12px; margin-top:12px;">
-          <button type="submit" class="btn-action" style="flex:2;">حفظ وإرسال للعلبة 💾</button>
-          <button type="button" onclick="clearSelectedBox()" class="btn-action" style="flex:1; background:rgba(239,68,68,0.2); color:var(--danger);">تفريغ 🗑️</button>
+        <div class="form-buttons-row">
+          <button type="submit" class="btn-action flex-2">حفظ وإرسال للعلبة 💾</button>
+          <button type="button" onclick="App.clearSelectedBox()" class="btn-action btn-danger-soft flex-1">تفريغ 🗑️</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- NETWORK -->
+  <!-- ========== NETWORK ========== -->
   <div class="page-tab" id="page-network">
-    <div style="font-size:22px; font-weight:900; margin-bottom:18px;">🌐 شبكة الرعاية</div>
+    <div class="page-title">🌐 شبكة الرعاية</div>
+
     <div class="net-stats">
-      <div class="net-stat-card"><div class="net-stat-num" id="net-count-linked">0</div><div class="net-stat-label" id="net-label-linked">حسابات مرتبطة</div></div>
-      <div class="net-stat-card"><div class="net-stat-num" id="net-count-pending">0</div><div class="net-stat-label">طلبات معلقة</div></div>
-      <div class="net-stat-card"><div class="net-stat-num" style="color:var(--success);">100%</div><div class="net-stat-label">أمان التزامن</div></div>
+      <div class="net-stat-card">
+        <div class="net-stat-num" id="net-count-linked">0</div>
+        <div class="net-stat-label" id="net-label-linked">حسابات مرتبطة</div>
+      </div>
+      <div class="net-stat-card">
+        <div class="net-stat-num" id="net-count-pending">0</div>
+        <div class="net-stat-label">طلبات معلقة</div>
+      </div>
+      <div class="net-stat-card">
+        <div class="net-stat-num success">100%</div>
+        <div class="net-stat-label">أمان التزامن</div>
+      </div>
     </div>
 
     <div id="doctor-network-section" style="display:none;">
       <div class="custom-card">
-        <h3 style="font-size:16px; font-weight:800; margin-bottom:6px;">➕ إضافة مريض</h3>
-        <form onsubmit="sendPatientRequest(event)" style="display:flex; gap:10px;">
-          <input type="text" id="target-patient-username" class="form-control" placeholder="اسم المستخدم..." required style="flex:1;">
-          <button type="submit" class="btn-action" style="width:auto; margin:0; padding:0 22px;">إرسال</button>
+        <h3 class="card-title-sm">➕ إضافة مريض</h3>
+        <form onsubmit="App.sendPatientRequest(event)" class="inline-form">
+          <input type="text" id="target-patient-username" class="form-control" placeholder="اسم المستخدم..." required>
+          <button type="submit" class="btn-action btn-inline">إرسال</button>
         </form>
       </div>
       <div class="custom-card">
-        <h3 style="font-size:16px; font-weight:800; margin-bottom:16px;">👥 المرضى التابعون</h3>
+        <h3 class="card-title-sm">👥 المرضى التابعون</h3>
         <div id="doctor-patients-list"></div>
       </div>
     </div>
 
     <div id="patient-network-section" style="display:none;">
       <div class="custom-card">
-        <h3 style="font-size:16px; font-weight:800; margin-bottom:16px;">📩 طلبات الأطباء</h3>
+        <h3 class="card-title-sm">📩 طلبات الأطباء</h3>
         <div id="patient-requests-list"></div>
       </div>
       <div class="custom-card">
-        <h3 style="font-size:16px; font-weight:800; margin-bottom:16px;">🩺 الأطباء المتابعون</h3>
+        <h3 class="card-title-sm">🩺 الأطباء المتابعون</h3>
         <div id="patient-doctors-list"></div>
       </div>
     </div>
   </div>
 
-  <!-- SETTINGS -->
+  <!-- ========== SETTINGS ========== -->
   <div class="page-tab" id="page-settings">
-    <div style="font-size:22px; font-weight:900; margin-bottom:18px;">⚙ إعدادات الحساب</div>
+    <div class="page-title">⚙ إعدادات الحساب</div>
 
     <div class="stg-profile-banner">
       <div class="stg-avatar-large" id="stg-avatar-letter">U</div>
       <div>
-        <h3 id="stg-display-name" style="font-size:18px; font-weight:900;">اسم المستخدم</h3>
-        <p id="stg-username-text" style="font-size:13px; color:var(--text-secondary);">@username</p>
+        <h3 id="stg-display-name" class="stg-name">اسم المستخدم</h3>
+        <p id="stg-username-text" class="stg-username">@username</p>
         <span class="stg-role-tag" id="stg-role-badge">حساب مريض</span>
       </div>
     </div>
 
     <div class="custom-card">
-      <h3 style="font-size:15px; font-weight:800; margin-bottom:12px; color:var(--accent-blue);">🎨 التفضيلات</h3>
+      <h3 class="card-section-title">🎨 التفضيلات</h3>
       <div class="stg-item">
         <div class="stg-info"><h4>الوضع الداكن</h4><p>المظهر الليلي</p></div>
-        <label class="switch"><input type="checkbox" id="stg-theme-switch" checked onchange="toggleTheme()"><span class="slider"></span></label>
+        <label class="switch">
+          <input type="checkbox" id="stg-theme-switch" checked onchange="App.toggleTheme()">
+          <span class="slider"></span>
+        </label>
       </div>
       <div class="stg-item">
         <div class="stg-info"><h4>اللغة</h4><p>تغيير الواجهة</p></div>
-        <button class="ctrl-btn" onclick="toggleLanguage()"><span id="stg-lang-text">العربية 🌐</span></button>
+        <button class="ctrl-btn" onclick="App.toggleLanguage()">
+          <span id="stg-lang-text">العربية 🌐</span>
+        </button>
       </div>
     </div>
 
     <div class="custom-card">
-      <h3 style="font-size:15px; font-weight:800; margin-bottom:12px; color:var(--accent-blue);">🔒 الأمان</h3>
-      <form onsubmit="changeUserPassword(event)">
+      <h3 class="card-section-title">🔒 الأمان</h3>
+      <form onsubmit="App.changePassword(event)">
         <div class="form-group">
           <label>تحديث كلمة السر</label>
           <input type="password" id="stg-new-pass" class="form-control" required>
         </div>
-        <button type="submit" class="btn-action" style="padding:10px 18px; font-size:13px; width:auto;">حفظ</button>
+        <button type="submit" class="btn-action btn-sm">حفظ</button>
       </form>
     </div>
 
     <div class="custom-card danger-zone">
-      <h3 style="font-size:15px; font-weight:800; margin-bottom:12px; color:var(--danger);">⚠️ إجراءات</h3>
-      <div style="display:flex; gap:12px;">
-        <button class="net-btn btn-danger-net" style="flex:1; padding:12px;" onclick="clearAllData()">إعادة ضبط البيانات</button>
-        <button class="net-btn btn-primary-net" style="flex:1; padding:12px;" onclick="logout()">تسجيل الخروج 🚪</button>
+      <h3 class="card-section-title danger">⚠️ إجراءات</h3>
+      <div class="form-buttons-row">
+        <button class="net-btn btn-danger-net flex-1 btn-pad" onclick="App.resetData()">إعادة ضبط البيانات</button>
+        <button class="net-btn btn-primary-net flex-1 btn-pad" onclick="App.logout()">تسجيل الخروج 🚪</button>
       </div>
     </div>
   </div>
 
 </div>
 
-<!-- BOTTOM NAV -->
+<!-- ==================== BOTTOM NAV ==================== -->
 <div class="bottom-nav" id="app-bottom-nav" style="display:none;">
-  <button class="nav-item active" onclick="switchPage('dashboard', this)">
+  <button class="nav-item active" onclick="App.switchPage('dashboard', this)">
     <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>الرئيسية</span>
   </button>
-  <button class="nav-item" onclick="switchPage('report', this)">
+  <button class="nav-item" onclick="App.switchPage('report', this)">
     <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg><span>التقرير</span>
   </button>
-  <button class="nav-item" onclick="switchPage('schedules', this)">
+  <button class="nav-item" onclick="App.switchPage('schedules', this)">
     <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg><span>المواعيد</span>
   </button>
-  <button class="nav-item" onclick="switchPage('network', this)">
+  <button class="nav-item" onclick="App.switchPage('network', this)">
     <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg><span>الربط الطبي</span>
   </button>
-  <button class="nav-item" onclick="switchPage('settings', this)">
+  <button class="nav-item" onclick="App.switchPage('settings', this)">
     <svg viewBox="0 0 24 24"><path d="M12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6-3.6z"/></svg><span>الإعدادات</span>
   </button>
 </div>
 
-<script>
-  // ==========================================
-  // ESP32 INTEGRATION
-  // ==========================================
-  let ESP32_IP = localStorage.getItem('esp32_ip') || '192.168.1.50';
-  let USE_ESP32 = localStorage.getItem('use_esp32') === 'true';
-  let espConnected = false;
-
-  async function esp32Request(path, method = 'GET', data = null, timeout = 3000) {
-    if (!USE_ESP32) return null;
-    const url = `http://${ESP32_IP}${path}`;
-    const options = { method: method, headers: { 'Content-Type': 'application/json' } };
-    if (data) options.body = JSON.stringify(data);
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), timeout);
-      options.signal = controller.signal;
-      const response = await fetch(url, options);
-      clearTimeout(timeoutId);
-      if (!response.ok) throw new Error('HTTP ' + response.status);
-      return await response.json();
-    } catch (error) {
-      console.warn('ESP32 request failed:', error.message);
-      espConnected = false;
-      updateEspStatusUI();
-      return null;
-    }
-  }
-
-  function saveEspIp() {
-    const ip = document.getElementById('esp-ip-input').value.trim();
-    if (!ip) { alert('ادخل IP صحيح'); return; }
-    ESP32_IP = ip;
-    localStorage.setItem('esp32_ip', ip);
-    USE_ESP32 = true;
-    localStorage.setItem('use_esp32', 'true');
-    alert('تم حفظ IP: ' + ip);
-    testEspConnection();
-  }
-
-  async function testEspConnection() {
-    const statusEl = document.getElementById('esp-status');
-    statusEl.className = 'esp-status disconnected';
-    statusEl.innerText = 'جاري الاختبار...';
-    const result = await esp32Request('/api/status', 'GET', null, 5000);
-    if (result) {
-      espConnected = true;
-      statusEl.className = 'esp-status connected';
-      statusEl.innerText = '✅ متصل';
-      updateHwStatus(true);
-    } else {
-      espConnected = false;
-      statusEl.className = 'esp-status disconnected';
-      statusEl.innerText = '❌ غير متصل';
-      updateHwStatus(false);
-    }
-  }
-
-  function updateEspStatusUI() {
-    const statusEl = document.getElementById('esp-status');
-    if (!statusEl) return;
-    if (espConnected) {
-      statusEl.className = 'esp-status connected';
-      statusEl.innerText = '✅ متصل';
-    } else {
-      statusEl.className = 'esp-status disconnected';
-      statusEl.innerText = '❌ غير متصل';
-    }
-  }
-
-  function updateHwStatus(online) {
-    const pulse = document.getElementById('hw-pulse');
-    const text = document.getElementById('hw-status-text');
-    if (online) {
-      pulse.className = 'pulse-dot';
-      text.innerText = 'العلبة الذكية متصلة (ESP32-WiFi)';
-    } else {
-      pulse.className = 'pulse-dot offline';
-      text.innerText = 'العلبة الذكية غير متصلة (وضع محلي)';
-    }
-  }
-
-  async function syncFromEsp32() {
-    if (!USE_ESP32 || !currentUser || currentUser.role !== 'patient') return;
-    const data = await esp32Request('/api/status');
-    if (!data) return;
-    espConnected = true;
-    updateEspStatusUI();
-    updateHwStatus(true);
-    
-    if (data.currentTime) document.getElementById('rtc-time').innerText = data.currentTime;
-    if (data.nextDose) document.getElementById('next-dose-val').innerText = data.nextDose;
-    
-    if (data.compartments && activePatientData && activePatientData.meds) {
-      data.compartments.forEach((espComp, i) => {
-        const boxId = i + 1;
-        if (activePatientData.meds[boxId] && espComp.status === 'TAKEN') {
-          activePatientData.meds[boxId].taken = true;
-        }
-      });
-      saveDb();
-      loadPatientMedsToUI();
-    }
-  }
-
-  // ==========================================
-  // LANDING & AUTH
-  // ==========================================
-  function goToAuth() {
-    document.getElementById('landing-page').classList.add('hidden');
-    document.getElementById('auth-overlay').classList.remove('hidden');
-  }
-  function backToLanding() {
-    document.getElementById('auth-overlay').classList.add('hidden');
-    document.getElementById('landing-page').classList.remove('hidden');
-  }
-
-  let currentLang = 'ar';
-  let currentTheme = 'dark';
-
-  function updateDateDisplay() {
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    document.getElementById('current-date-display').innerText = new Date().toLocaleDateString(currentLang === 'ar' ? 'ar-EG' : 'en-US', options);
-  }
-  updateDateDisplay();
-
-  function toggleLanguage() {
-    currentLang = currentLang === 'ar' ? 'en' : 'ar';
-    document.documentElement.lang = currentLang;
-    document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
-    document.getElementById('lang-label').innerText = currentLang === 'ar' ? 'EN' : 'عربي';
-    document.getElementById('stg-lang-text').innerText = currentLang === 'ar' ? 'العربية 🌐' : 'English 🌐';
-    updateDateDisplay();
-  }
-
-  function toggleTheme() {
-    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', currentTheme);
-    document.getElementById('theme-icon').innerText = currentTheme === 'dark' ? '🌙' : '☀';
-    document.getElementById('stg-theme-switch').checked = (currentTheme === 'dark');
-  }
-
-  // ==========================================
-  // USERS
-  // ==========================================
-  let usersDb = JSON.parse(localStorage.getItem('pillbox_users')) || [];
-  let currentUser = null;
-  let activePatientData = null;
-
-  function saveDb() { localStorage.setItem('pillbox_users', JSON.stringify(usersDb)); }
-
-  function toggleAuthMode(mode) {
-    document.getElementById('btn-tab-login').classList.toggle('active', mode === 'login');
-    document.getElementById('btn-tab-register').classList.toggle('active', mode === 'register');
-    document.getElementById('form-login').style.display = mode === 'login' ? 'block' : 'none';
-    document.getElementById('form-register').style.display = mode === 'register' ? 'block' : 'none';
-  }
-
-  function handleRegister(e) {
-    e.preventDefault();
-    const username = document.getElementById('reg-username').value.trim();
-    if (usersDb.find(u => u.username === username)) { alert('اسم المستخدم موجود!'); return; }
-    const newUser = {
-      fullname: document.getElementById('reg-fullname').value,
-      age: document.getElementById('reg-age').value,
-      role: document.getElementById('reg-role').value,
-      username: username,
-      password: document.getElementById('reg-password').value,
-      requests: [], patients: [],
-      notifications: [{ id: Date.now(), text: 'أهلاً بك في Nura Box!' }],
-      meds: {
-        1: { name: '', time: '', pills: 1, repeat: 'يومياً', taken: false },
-        2: { name: '', time: '', pills: 1, repeat: 'يومياً', taken: false },
-        3: { name: '', time: '', pills: 1, repeat: 'يومياً', taken: false },
-        4: { name: '', time: '', pills: 1, repeat: 'يومياً', taken: false }
-      },
-      reportsHistory: []
-    };
-    usersDb.push(newUser);
-    saveDb();
-    alert('تم إنشاء الحساب!');
-    toggleAuthMode('login');
-  }
-
-  function handleLogin(e) {
-    e.preventDefault();
-    const u = document.getElementById('login-username').value.trim();
-    const p = document.getElementById('login-password').value;
-    const user = usersDb.find(x => x.username === u && x.password === p);
-    if (!user) { alert('بيانات غلط!'); return; }
-    currentUser = user;
-    document.getElementById('auth-overlay').classList.add('hidden');
-    document.getElementById('app-header').style.display = 'flex';
-    document.getElementById('app-container').style.display = 'block';
-    document.getElementById('app-bottom-nav').style.display = 'flex';
-    initUserDashboard();
-  }
-
-  function logout() {
-    currentUser = null;
-    activePatientData = null;
-    document.getElementById('app-header').style.display = 'none';
-    document.getElementById('app-container').style.display = 'none';
-    document.getElementById('app-bottom-nav').style.display = 'none';
-    document.getElementById('landing-page').classList.remove('hidden');
-  }
-
-  function initUserDashboard() {
-    document.getElementById('user-display').innerText = currentUser.fullname;
-    document.getElementById('stg-avatar-letter').innerText = currentUser.fullname.charAt(0);
-    document.getElementById('stg-display-name').innerText = currentUser.fullname;
-    document.getElementById('stg-username-text').innerText = `@${currentUser.username}`;
-    document.getElementById('stg-role-badge').innerText = currentUser.role === 'doctor' ? 'حساب طبيب' : 'حساب مريض';
-    updateNotificationsUI();
-
-    if (currentUser.role === 'doctor') {
-      document.getElementById('doctor-network-section').style.display = 'block';
-      document.getElementById('patient-network-section').style.display = 'none';
-      document.getElementById('patient-report-form').style.display = 'none';
-      document.getElementById('doctor-report-review').style.display = 'block';
-      renderDoctorPatients();
-      renderDoctorReportsReview();
-    } else {
-      document.getElementById('doctor-network-section').style.display = 'none';
-      document.getElementById('patient-network-section').style.display = 'block';
-      document.getElementById('patient-report-form').style.display = 'block';
-      document.getElementById('doctor-report-review').style.display = 'none';
-      activePatientData = currentUser;
-      renderPatientRequests();
-      renderPatientDoctors();
-      loadPatientMedsToUI();
-      renderPatientReportsHistory();
-      renderSchedulesUI();
-    }
-    updateNetworkStats();
-
-    // ESP32
-    document.getElementById('esp-ip-input').value = ESP32_IP;
-    if (USE_ESP32) testEspConnection();
-  }
-
-  function toggleNotifDropdown() { document.getElementById('notif-dropdown').classList.toggle('show'); }
-
-  function updateNotificationsUI() {
-    if (!currentUser || !currentUser.notifications) return;
-    document.getElementById('notif-count').innerText = currentUser.notifications.length;
-    const container = document.getElementById('notif-items-container');
-    if (currentUser.notifications.length === 0) {
-      container.innerHTML = '<div class="notif-item" style="color:var(--text-secondary);">لا توجد إشعارات</div>';
-      return;
-    }
-    container.innerHTML = currentUser.notifications.map(n => `<div class="notif-item">🔔 ${n.text}</div>`).join('');
-  }
-
-  function loadPatientMedsToUI() {
-    if (!activePatientData || !activePatientData.meds) return;
-    let totalMeds = 0, takenMeds = 0, upcomingTime = '--:--';
-    for (let i = 1; i <= 4; i++) {
-      const med = activePatientData.meds[i];
-      const boxCard = document.getElementById(`box-${i}`);
-      const medNameEl = document.getElementById(`med-name-${i}`);
-      const medTimeEl = document.getElementById(`med-time-${i}`);
-      const badgeEl = document.getElementById(`badge-${i}`);
-      const btnDose = document.getElementById(`btn-dose-${i}`);
-
-      if (med && med.name) {
-        totalMeds++;
-        medNameEl.innerText = med.name;
-        medTimeEl.innerText = `⏰ ${med.time || '--:--'}`;
-        btnDose.style.display = 'block';
-        if (med.taken) {
-          takenMeds++;
-          boxCard.className = 'box-card taken';
-          badgeEl.innerText = 'تم الأخذ ✅';
-          btnDose.className = 'btn-take-dose done';
-          btnDose.innerText = 'تم أخذ الجرعة ✨';
-          btnDose.disabled = true;
-        } else {
-          boxCard.className = 'box-card waiting';
-          badgeEl.innerText = 'في الانتظار';
-          btnDose.className = 'btn-take-dose';
-          btnDose.innerText = 'تأكيد أخذ الجرعة ✅';
-          btnDose.disabled = false;
-          if (upcomingTime === '--:--') upcomingTime = med.time;
-        }
-      } else {
-        medNameEl.innerText = '--';
-        medTimeEl.innerText = '⏰ --:--';
-        boxCard.className = 'box-card empty';
-        badgeEl.innerText = 'فارغ';
-        btnDose.style.display = 'none';
-      }
-    }
-    const rate = totalMeds > 0 ? Math.round((takenMeds / totalMeds) * 100) : 0;
-    document.getElementById('kpi-rate').innerText = `${rate}%`;
-    document.getElementById('kpi-bar-fill').style.width = `${rate}%`;
-    document.getElementById('next-dose-val').innerText = upcomingTime;
-  }
-
-  async function markDoseTaken(boxId) {
-    if (!activePatientData || !activePatientData.meds[boxId]) return;
-    activePatientData.meds[boxId].taken = true;
-    saveDb();
-    loadPatientMedsToUI();
-    if (USE_ESP32 && espConnected) {
-      await esp32Request('/api/taken', 'POST', { box: parseInt(boxId) });
-    }
-  }
-
-  async function triggerBuzzerTest() {
-    if (USE_ESP32 && espConnected) {
-      const r = await esp32Request('/api/buzzer', 'POST');
-      if (r) { alert('🔊 تم إرسال أمر التنبيه!'); return; }
-    }
-    alert('🔊 اختبار التنبيه (محلي)');
-  }
-
-  async function syncHardwareTime() {
-    if (USE_ESP32 && espConnected) {
-      const r = await esp32Request('/api/sync', 'POST');
-      if (r) { alert('⏱️ تمت المزامنة!'); return; }
-    }
-    alert('⏱️ مزامنة الوقت (محلي)');
-  }
-
-  function renderSchedulesUI() {
-    if (!activePatientData || !activePatientData.meds) return;
-    const container = document.getElementById('schedule-slots-container');
-    container.innerHTML = '';
-    let activeCount = 0, nextTime = '--:--';
-    for (let i = 1; i <= 4; i++) {
-      const med = activePatientData.meds[i];
-      const isConfigured = med && med.name;
-      if (isConfigured) {
-        activeCount++;
-        if (nextTime === '--:--' && !med.taken) nextTime = med.time;
-      }
-      const slotCard = document.createElement('div');
-      slotCard.className = `sched-list-card ${isConfigured ? 'active-slot' : 'empty-slot'}`;
-      slotCard.innerHTML = `
-        <div class="sched-info-main">
-          <h4>📦 الخانة 0${i}: ${isConfigured ? med.name : 'غير مبرمجة'}</h4>
-          <p>⏰ ${isConfigured ? med.time : '--:--'} • ${isConfigured ? (med.pills || 1) + ' قرص' : '--'}</p>
-          ${isConfigured ? `<span class="sched-pill-tag">🔄 ${med.repeat || 'يومياً'}</span>` : ''}
-        </div>
-        <div class="sched-actions">
-          <button class="btn-sched-action" onclick="selectBoxForEdit(${i})">✏️ تعديل</button>
-          ${isConfigured ? `<button class="btn-sched-action btn-sched-del" onclick="clearBoxDirect(${i})">🗑</button>` : ''}
-        </div>`;
-      container.appendChild(slotCard);
-    }
-    document.getElementById('sched-active-cnt').innerText = `${activeCount}/4`;
-    document.getElementById('sched-next-time').innerText = nextTime;
-    loadSelectedBoxToForm();
-  }
-
-  function selectBoxForEdit(boxId) {
-    document.getElementById('sched-box').value = boxId;
-    loadSelectedBoxToForm();
-    document.getElementById('schedule-form-card').scrollIntoView({ behavior: 'smooth' });
-  }
-
-  function loadSelectedBoxToForm() {
-    const boxId = document.getElementById('sched-box').value;
-    const med = activePatientData.meds ? activePatientData.meds[boxId] : null;
-    if (med && med.name) {
-      document.getElementById('sched-name').value = med.name;
-      document.getElementById('sched-time').value = med.time;
-      document.getElementById('sched-pills-count').value = med.pills || 1;
-      document.getElementById('sched-repeat').value = med.repeat || 'يومياً';
-    } else {
-      document.getElementById('sched-name').value = '';
-      document.getElementById('sched-time').value = '';
-      document.getElementById('sched-pills-count').value = 1;
-      document.getElementById('sched-repeat').value = 'يومياً';
-    }
-  }
-
-  async function saveAdvancedSchedule() {
-    if (!activePatientData) return;
-    const boxId = document.getElementById('sched-box').value;
-    const name = document.getElementById('sched-name').value.trim();
-    const time = document.getElementById('sched-time').value;
-    const pills = document.getElementById('sched-pills-count').value;
-    const repeat = document.getElementById('sched-repeat').value;
-
-    if (!activePatientData.meds) activePatientData.meds = {};
-    activePatientData.meds[boxId] = { name, time, pills, repeat, taken: false };
-    saveDb();
-    loadPatientMedsToUI();
-    renderSchedulesUI();
-
-    if (USE_ESP32 && espConnected) {
-      const r = await esp32Request('/api/save', 'POST', {
-        box: parseInt(boxId), name, time, pills: parseInt(pills), repeat
-      });
-      if (r) { alert(`✅ تم حفظ الخانة 0${boxId} وإرسالها للعلبة!`); return; }
-    }
-    alert(`تم حفظ الخانة 0${boxId} (محلي).`);
-  }
-
-  function clearSelectedBox() { clearBoxDirect(document.getElementById('sched-box').value); }
-
-  async function clearBoxDirect(boxId) {
-    if (confirm(`هل أنت متأكد من تفريغ الخانة 0${boxId}؟`)) {
-      if (activePatientData.meds && activePatientData.meds[boxId]) {
-        activePatientData.meds[boxId] = { name: '', time: '', pills: 1, repeat: 'يومياً', taken: false };
-        saveDb();
-        loadPatientMedsToUI();
-        renderSchedulesUI();
-        if (USE_ESP32 && espConnected) {
-          await esp32Request('/api/clear', 'POST', { box: parseInt(boxId) });
-        }
-      }
-    }
-  }
-
-  function submitWeeklyReport(e) {
-    e.preventDefault();
-    if (!currentUser.reportsHistory) currentUser.reportsHistory = [];
-    const newReport = {
-      id: Date.now(),
-      status: document.getElementById('report-health-status').value,
-      problemMed: document.getElementById('report-problem-med').value,
-      symptoms: document.getElementById('report-symptoms').value,
-      notes: document.getElementById('report-notes').value,
-      date: new Date().toLocaleDateString('ar-EG'),
-      doctorNote: null
-    };
-    currentUser.reportsHistory.unshift(newReport);
-    saveDb();
-    alert('تم إرسال التقرير!');
-    document.getElementById('report-symptoms').value = '';
-    document.getElementById('report-notes').value = '';
-    renderPatientReportsHistory();
-  }
-
-  function renderPatientReportsHistory() {
-    const container = document.getElementById('patient-report-history');
-    if (!currentUser.reportsHistory || currentUser.reportsHistory.length === 0) {
-      container.innerHTML = '<p style="font-size:13px; color:var(--text-secondary);">لا توجد تقارير.</p>';
-      return;
-    }
-    container.innerHTML = currentUser.reportsHistory.map(rep => `
-      <div class="report-history-card">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-          <span style="font-size:13px; font-weight:800; color:var(--accent-blue);">📅 ${rep.date}</span>
-          <span class="report-status-badge ${rep.doctorNote ? 'rep-badge-reviewed' : 'rep-badge-pending'}">
-            ${rep.doctorNote ? 'تمت المراجعة ✅' : 'قيد المراجعة ⏳'}
-          </span>
-        </div>
-        <div style="font-size:13px; line-height:1.6;">
-          <div><strong>الحالة:</strong> ${rep.status}</div>
-          <div>⚠️ <strong>مشكلة:</strong> ${rep.problemMed}</div>
-          <div>🤒 <strong>أعراض:</strong> ${rep.symptoms}</div>
-          ${rep.notes ? `<div>💬 ${rep.notes}</div>` : ''}
-        </div>
-        ${rep.doctorNote ? `<div class="doc-reply-box"><strong>🩺 توصية الطبيب:</strong> ${rep.doctorNote}</div>` : ''}
-      </div>`).join('');
-  }
-
-  function renderDoctorReportsReview() {
-    const container = document.getElementById('reports-list-container');
-    container.innerHTML = '';
-    if (!currentUser.patients || currentUser.patients.length === 0) {
-      container.innerHTML = '<p style="font-size:13px; color:var(--text-secondary);">لا يوجد مرضى.</p>';
-      return;
-    }
-    let hasReports = false;
-    currentUser.patients.forEach(patUsername => {
-      const pat = usersDb.find(u => u.username === patUsername);
-      if (pat && pat.reportsHistory && pat.reportsHistory.length > 0) {
-        hasReports = true;
-        pat.reportsHistory.forEach(rep => {
-          const card = document.createElement('div');
-          card.className = 'net-card';
-          card.innerHTML = `
-            <div style="border-bottom:1px solid var(--card-border); padding-bottom:10px; display:flex; justify-content:space-between;">
-              <strong>👤 ${pat.fullname} (@${pat.username})</strong>
-              <span style="color:var(--accent-blue); font-size:12px;">📅 ${rep.date}</span>
-            </div>
-            <div style="font-size:13px; line-height:1.6;">
-              <div><strong>الحالة:</strong> ${rep.status}</div>
-              <div>⚠️ ${rep.problemMed}</div>
-              <div>🤒 ${rep.symptoms}</div>
-            </div>
-            <div style="margin-top:10px;">
-              <textarea id="reply-input-${rep.id}" class="form-control" rows="2" placeholder="اكتب توصيتك...">${rep.doctorNote || ''}</textarea>
-              <button onclick="saveDoctorFeedback('${pat.username}', ${rep.id})" class="btn-action" style="padding:8px; font-size:13px; margin-top:8px;">إرسال التوصية 💬</button>
-            </div>`;
-          container.appendChild(card);
-        });
-      }
-    });
-    if (!hasReports) {
-      container.innerHTML = '<p style="font-size:13px; color:var(--text-secondary);">لا توجد تقارير.</p>';
-    }
-  }
-
-  function saveDoctorFeedback(patUsername, repId) {
-    const pat = usersDb.find(u => u.username === patUsername);
-    if (pat && pat.reportsHistory) {
-      const rep = pat.reportsHistory.find(r => r.id === repId);
-      if (rep) {
-        rep.doctorNote = document.getElementById(`reply-input-${repId}`).value;
-        if (!pat.notifications) pat.notifications = [];
-        pat.notifications.unshift({ id: Date.now(), text: `الدكتور ${currentUser.fullname} رد على تقريرك!` });
-        saveDb();
-        alert('تم الإرسال!');
-        renderDoctorReportsReview();
-      }
-    }
-  }
-
-  function updateNetworkStats() {
-    if (currentUser.role === 'doctor') {
-      document.getElementById('net-count-linked').innerText = currentUser.patients ? currentUser.patients.length : 0;
-      document.getElementById('net-label-linked').innerText = 'مرضى مضافون';
-      let pending = 0;
-      usersDb.filter(u => u.role === 'patient').forEach(p => {
-        if (p.requests && p.requests.includes(currentUser.username)) pending++;
-      });
-      document.getElementById('net-count-pending').innerText = pending;
-    } else {
-      let docCount = 0;
-      usersDb.filter(u => u.role === 'doctor').forEach(d => {
-        if (d.patients && d.patients.includes(currentUser.username)) docCount++;
-      });
-      document.getElementById('net-count-linked').innerText = docCount;
-      document.getElementById('net-label-linked').innerText = 'أطباء متابعون';
-      document.getElementById('net-count-pending').innerText = currentUser.requests ? currentUser.requests.length : 0;
-    }
-  }
-
-  function sendPatientRequest(e) {
-    e.preventDefault();
-    const targetUsername = document.getElementById('target-patient-username').value.trim();
-    const targetUser = usersDb.find(u => u.username === targetUsername && u.role === 'patient');
-    if (!targetUser) { alert('المستخدم غير موجود!'); return; }
-    if (!targetUser.requests) targetUser.requests = [];
-    if (targetUser.requests.includes(currentUser.username)) { alert('تم الإرسال مسبقاً!'); return; }
-    targetUser.requests.push(currentUser.username);
-    saveDb();
-    alert(`تم إرسال الطلب إلى ${targetUser.fullname}`);
-    document.getElementById('target-patient-username').value = '';
-    updateNetworkStats();
-  }
-
-  function renderDoctorPatients() {
-    const list = document.getElementById('doctor-patients-list');
-    list.innerHTML = '';
-    if (!currentUser.patients || currentUser.patients.length === 0) {
-      list.innerHTML = '<p style="font-size:13px; color:var(--text-secondary);">لا يوجد مرضى.</p>';
-      return;
-    }
-    currentUser.patients.forEach(patUsername => {
-      const pat = usersDb.find(u => u.username === patUsername);
-      if (pat) {
-        const div = document.createElement('div');
-        div.className = 'net-card';
-        div.innerHTML = `
-          <div class="net-card-header">
-            <div class="net-user-info">
-              <div class="net-avatar">${pat.fullname.charAt(0)}</div>
-              <div class="net-user-details"><h4>${pat.fullname}</h4><p>@${pat.username} • ${pat.age} سنة</p></div>
-            </div>
-            <span class="net-status-badge status-active">مربوط</span>
-          </div>
-          <div class="net-actions">
-            <button onclick="inspectPatient('${pat.username}')" class="net-btn btn-primary-net">📊 التحكم</button>
-            <button onclick="unlinkPatient('${pat.username}')" class="net-btn btn-danger-net">إلغاء الربط</button>
-          </div>`;
-        list.appendChild(div);
-      }
-    });
-  }
-
-  function renderPatientDoctors() {
-    const list = document.getElementById('patient-doctors-list');
-    list.innerHTML = '';
-    let connectedDoctors = usersDb.filter(u => u.role === 'doctor' && u.patients && u.patients.includes(currentUser.username));
-    if (connectedDoctors.length === 0) {
-      list.innerHTML = '<p style="font-size:13px; color:var(--text-secondary);">لا يوجد أطباء.</p>';
-      return;
-    }
-    connectedDoctors.forEach(doc => {
-      const div = document.createElement('div');
-      div.className = 'net-card';
-      div.innerHTML = `
-        <div class="net-card-header">
-          <div class="net-user-info">
-            <div class="net-avatar" style="background:linear-gradient(135deg,#10b981,#0284c7);">د</div>
-            <div class="net-user-details"><h4>د. ${doc.fullname}</h4><p>طبيب معالج</p></div>
-          </div>
-          <span class="net-status-badge status-active">نشط</span>
-        </div>`;
-      list.appendChild(div);
-    });
-  }
-
-  function renderPatientRequests() {
-    const list = document.getElementById('patient-requests-list');
-    list.innerHTML = '';
-    if (!currentUser.requests || currentUser.requests.length === 0) {
-      list.innerHTML = '<p style="font-size:13px; color:var(--text-secondary);">لا توجد طلبات.</p>';
-      return;
-    }
-    currentUser.requests.forEach(docUsername => {
-      const doc = usersDb.find(u => u.username === docUsername);
-      const div = document.createElement('div');
-      div.className = 'net-card';
-      div.innerHTML = `
-        <div class="net-card-header">
-          <div class="net-user-info">
-            <div class="net-avatar">🩺</div>
-            <div class="net-user-details"><h4>د. ${doc ? doc.fullname : docUsername}</h4><p>طلب انضمام</p></div>
-          </div>
-          <span class="net-status-badge status-pending">جديد</span>
-        </div>
-        <div class="net-actions">
-          <button onclick="acceptRequest('${docUsername}')" class="net-btn btn-primary-net">قبول</button>
-          <button onclick="rejectRequest('${docUsername}')" class="net-btn btn-danger-net">رفض</button>
-        </div>`;
-      list.appendChild(div);
-    });
-  }
-
-  function acceptRequest(docUsername) {
-    const doc = usersDb.find(u => u.username === docUsername);
-    if (doc) {
-      if (!doc.patients) doc.patients = [];
-      if (!doc.patients.includes(currentUser.username)) doc.patients.push(currentUser.username);
-    }
-    currentUser.requests = currentUser.requests.filter(u => u !== docUsername);
-    saveDb();
-    alert('تم القبول!');
-    renderPatientRequests();
-    renderPatientDoctors();
-    updateNetworkStats();
-  }
-
-  function rejectRequest(docUsername) {
-    currentUser.requests = currentUser.requests.filter(u => u !== docUsername);
-    saveDb();
-    renderPatientRequests();
-    updateNetworkStats();
-  }
-
-  function unlinkPatient(patUsername) {
-    if (confirm('إلغاء الربط؟')) {
-      currentUser.patients = currentUser.patients.filter(p => p !== patUsername);
-      saveDb();
-      renderDoctorPatients();
-      updateNetworkStats();
-    }
-  }
-
-  function inspectPatient(patUsername) {
-    const pat = usersDb.find(u => u.username === patUsername);
-    activePatientData = pat;
-    document.getElementById('patient-view-header').style.display = 'block';
-    document.getElementById('viewing-patient-name').innerText = pat.fullname;
-    loadPatientMedsToUI();
-    renderSchedulesUI();
-    switchPage('dashboard', document.querySelectorAll('.nav-item')[0]);
-  }
-
-  function changeUserPassword(e) {
-    e.preventDefault();
-    const newPass = document.getElementById('stg-new-pass').value;
-    if (newPass) {
-      currentUser.password = newPass;
-      saveDb();
-      alert('تم التغيير!');
-      document.getElementById('stg-new-pass').value = '';
-    }
-  }
-
-  function clearAllData() {
-    if (confirm('مسح كافة البيانات؟')) {
-      localStorage.removeItem('pillbox_users');
-      location.reload();
-    }
-  }
-
-  function switchPage(pageId, navBtn) {
-    document.querySelectorAll('.page-tab').forEach(tab => tab.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
-    document.getElementById('page-' + pageId).classList.add('active');
-    if (navBtn) navBtn.classList.add('active');
-  }
-
-  // Clock (local if no ESP32)
-  setInterval(() => {
-    if (!USE_ESP32 || !espConnected) {
-      document.getElementById('rtc-time').innerText = new Date().toTimeString().substring(0, 5);
-    }
-  }, 1000);
-
-  // ESP32 Polling
-  setInterval(() => {
-    if (USE_ESP32 && currentUser && currentUser.role === 'patient') {
-      syncFromEsp32();
-    }
-  }, 5000);
-
-  // Chart
-  const ctx = document.getElementById('adherenceChart').getContext('2d');
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: ['السبت', 'الأحد', 'الإثنين', 'الثلاثاء', 'الخميس', 'اليوم'],
-      datasets: [{ label: '% الالتزام', data: [80, 100, 90, 85, 95, 100], borderColor: '#38bdf8', backgroundColor: 'rgba(56, 189, 248, 0.12)', fill: true, tension: 0.4, pointRadius: 4, pointBackgroundColor: '#38bdf8' }]
-    },
-    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { min: 0, max: 100 } } }
-  });
-
-  // Load ESP IP
-  window.addEventListener('load', () => {
-    const ipInput = document.getElementById('esp-ip-input');
-    if (ipInput) ipInput.value = ESP32_IP;
-  });
-</script>
+<!-- ==================== SCRIPTS ==================== -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script src="api.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
