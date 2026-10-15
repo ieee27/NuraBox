@@ -1,0 +1,27 @@
+name: Auto Unzip
+on:
+  push:
+    paths:
+      - '**.zip'  # Trigger only when a zip file is pushed
+
+jobs:
+  unzip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Unzip files
+        run: |
+          # Find all zip files, decompress them to the current directory
+          for f in $(find . -name "*.zip"); do
+            unzip -o "$f" -d .
+            rm "$f"  # Optional: delete the zip file after decompression
+          done
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Auto unzip" || exit 0
+          git push
