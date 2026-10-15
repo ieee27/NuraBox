@@ -1,450 +1,131 @@
-<!DOCTYPE html>
-<html dir="rtl" lang="ar">
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nura Box - Smart Care Smarter Life</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nura Box</title>
+<meta name="theme-color" content="#0f172a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%236366f1'/%3E%3Cpath d='M9 16h14M16 9v14' stroke='white' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/mqtt@5.3.4/dist/mqtt.min.js"></script>
+<script defer src="js/i18n.js"></script>
+<script defer src="js/store.js"></script>
+<script defer src="js/auth.js"></script>
+<script defer src="js/dashboard.js"></script>
+<script defer src="js/pages.js"></script>
+<script defer src="js/app.js"></script>
 </head>
 <body>
+<div id="toasts" aria-live="polite"></div>
 
-<!-- ==================== LANDING ==================== -->
-<div id="landing-page">
-  <div class="landing-overlay"></div>
-  <div class="landing-content">
-    <div class="landing-logo">
-      <div class="landing-logo-icon"><i class="fa-solid fa-box-tissue"></i></div>
-      <div class="landing-logo-text">Nura Box</div>
-    </div>
-
-    <main class="main-hero">
-      <div class="hero-badge">الجيل الجديد من الرعاية الصحية الذكية</div>
-      <h1>علبة الأدوية الذكية <span>Nura Box</span></h1>
-      <p>نظام مدمج يضمن تنبيهك بمواعيد أدويتك بدقة، ويتابع التزامك اليومي، مع ربط مباشر مع الطبيب المعالج للحفاظ على سلامتك وسلامة عائلتك.</p>
-      <div class="features-pills">
-        <div class="feature-pill"><i class="fa-solid fa-bell"></i> تنبيهات صوتية وضوئية</div>
-        <div class="feature-pill"><i class="fa-solid fa-user-doctor"></i> متابعة مباشرة مع الطبيب</div>
-        <div class="feature-pill"><i class="fa-solid fa-chart-line"></i> تقارير التزام دقيقة</div>
-      </div>
-      <button class="btn-start" onclick="App.goToAuth()">
-        <span>سجل الآن</span>
-        <i class="fa-solid fa-arrow-left"></i>
-      </button>
-    </main>
-
-    <footer class="landing-footer">© 2026 Nura Box. جميع الحقوق محفوظة</footer>
+<!-- ============ LOGIN ============ -->
+<section id="login-view" class="login">
+  <div class="login-art" aria-hidden="true">
+    <svg viewBox="0 0 400 300" class="pillbox">
+      <rect x="40" y="70" width="320" height="170" rx="22" class="pb-body"/>
+      <g class="pb-slots">
+        <rect x="58" y="92" width="68" height="126" rx="12"/>
+        <rect x="134" y="92" width="68" height="126" rx="12"/>
+        <rect x="210" y="92" width="68" height="126" rx="12"/>
+        <rect x="286" y="92" width="58" height="126" rx="12"/>
+      </g>
+      <g class="pb-lids">
+        <rect class="lid l1" x="58" y="92" width="68" height="126" rx="12"/>
+        <rect class="lid l2" x="134" y="92" width="68" height="126" rx="12"/>
+        <rect class="lid l3" x="210" y="92" width="68" height="126" rx="12"/>
+        <rect class="lid l4" x="286" y="92" width="58" height="126" rx="12"/>
+      </g>
+      <circle class="pb-led led1" cx="92" cy="80" r="5"/>
+      <circle class="pb-led led2" cx="168" cy="80" r="5"/>
+      <circle class="pb-led led3" cx="244" cy="80" r="5"/>
+      <circle class="pb-led led4" cx="315" cy="80" r="5"/>
+      <g class="pb-pills">
+        <ellipse class="pill p1" cx="92" cy="150" rx="16" ry="8"/>
+        <ellipse class="pill p2" cx="168" cy="160" rx="10" ry="10"/>
+        <ellipse class="pill p3" cx="244" cy="148" rx="16" ry="8"/>
+      </g>
+    </svg>
+    <h2 data-i18n="app_name">Nura Box</h2>
+    <p data-i18n="tagline"></p>
   </div>
-</div>
-
-<!-- ==================== DATE BAR ==================== -->
-<div class="date-bar" id="current-date-display">...</div>
-
-<!-- ==================== AUTH ==================== -->
-<div class="auth-overlay hidden" id="auth-overlay">
-  <div class="auth-card">
-    <button onclick="App.backToLanding()" class="btn-back-landing">
-      <i class="fa-solid fa-arrow-right"></i> العودة للصفحة الرئيسية
-    </button>
-    <div class="auth-header">
-      <h2>Nura Box</h2>
-      <p>Smart Care Smarter Life</p>
+  <div class="login-side">
+    <div class="login-tools">
+      <button class="chip" data-action="lang" data-i18n-title="lang" type="button"><span data-i18n="lang_name"></span></button>
+      <button class="chip" data-action="theme" data-i18n-title="theme" type="button"><span class="theme-icon">&#9680;</span></button>
     </div>
-    <div class="auth-toggle">
-      <button id="btn-tab-login" class="active" onclick="App.toggleAuthMode('login')">تسجيل الدخول</button>
-      <button id="btn-tab-register" onclick="App.toggleAuthMode('register')">حساب جديد</button>
-    </div>
+    <div class="glass login-card" id="login-card">
+      <div class="tabs" role="tablist">
+        <button class="tab active" id="tab-login" data-action="auth-tab" data-tab="login" role="tab" type="button" data-i18n="tab_login"></button>
+        <button class="tab" id="tab-register" data-action="auth-tab" data-tab="register" role="tab" type="button" data-i18n="tab_register"></button>
+      </div>
 
-    <form id="form-login" onsubmit="App.handleLogin(event)">
-      <div class="form-group">
-        <label>اسم المستخدم</label>
-        <input type="text" id="login-username" class="form-control" required>
-      </div>
-      <div class="form-group">
-        <label>كلمة السر</label>
-        <input type="password" id="login-password" class="form-control" required>
-      </div>
-      <button type="submit" class="btn-action">دخول</button>
-    </form>
-
-    <form id="form-register" style="display:none;" onsubmit="App.handleRegister(event)">
-      <div class="form-group">
-        <label>الاسم الكامل</label>
-        <input type="text" id="reg-fullname" class="form-control" required>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>العمر</label>
-          <input type="number" id="reg-age" class="form-control" required>
-        </div>
-        <div class="form-group">
-          <label>نوع الحساب</label>
-          <select id="reg-role" class="form-control">
-            <option value="patient">مريض</option>
-            <option value="doctor">طبيب</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>اسم المستخدم</label>
-        <input type="text" id="reg-username" class="form-control" required>
-      </div>
-      <div class="form-group">
-        <label>كلمة السر</label>
-        <input type="password" id="reg-password" class="form-control" required>
-      </div>
-      <button type="submit" class="btn-action">إنشاء حساب جديد</button>
-    </form>
-  </div>
-</div>
-
-<!-- ==================== HEADER ==================== -->
-<header id="app-header" style="display:none;">
-  <div class="brand">
-    <div class="brand-logo">NB</div>
-    <div class="brand-text">
-      <h1>Nura Box</h1>
-      <p>Smart Care Smarter Life</p>
-    </div>
-  </div>
-  <div class="header-right">
-    <div class="header-actions">
-      <button class="ctrl-btn" onclick="App.toggleNotifDropdown()">
-        <span>🔔</span>
-        <span class="notif-badge" id="notif-count">0</span>
-      </button>
-      <button class="ctrl-btn" onclick="App.toggleLanguage()">
-        <span>🌐</span>
-        <span id="lang-label">EN</span>
-      </button>
-      <button class="ctrl-btn" onclick="App.toggleTheme()">
-        <span id="theme-icon">🌙</span>
-      </button>
-    </div>
-    <div class="user-badge">
-      <span id="user-display">المستخدم</span>
-      <button class="btn-logout" onclick="App.logout()">🚪</button>
-    </div>
-    <div class="notif-dropdown" id="notif-dropdown">
-      <div class="notif-title">الإشعارات</div>
-      <div id="notif-items-container">
-        <div class="notif-item">لا توجد إشعارات جديدة</div>
-      </div>
-    </div>
-  </div>
-</header>
-
-<!-- ==================== APP CONTAINER ==================== -->
-<div class="container" id="app-container" style="display:none;">
-
-  <!-- ========== DASHBOARD ========== -->
-  <div class="page-tab active" id="page-dashboard">
-    <div class="esp-config-bar">
-      <span class="esp-label">📡 ESP32 IP:</span>
-      <input type="text" id="esp-ip-input" placeholder="192.168.1.50" value="192.168.1.50">
-      <button onclick="Api.saveEspIp()">حفظ</button>
-      <button onclick="Api.testEspConnection()">اختبار</button>
-      <span class="esp-status disconnected" id="esp-status">غير متصل</span>
-    </div>
-
-    <div id="patient-view-header" class="patient-view-header" style="display:none;">
-      👁 <strong>أنت تشاهد الآن بيانات المريض:</strong>
-      <span id="viewing-patient-name" class="patient-name-highlight">--</span>
-    </div>
-
-    <div class="hw-status-banner">
-      <div class="hw-status-item">
-        <div class="pulse-dot" id="hw-pulse"></div>
-        <span id="hw-status-text">العلبة الذكية متصلة (ESP32-WiFi)</span>
-      </div>
-      <div class="hw-status-item secondary">
-        🔋 البطارية: <strong class="battery-ok">94%</strong>
-      </div>
-    </div>
-
-    <div class="kpi-grid">
-      <div class="kpi-card">
-        <div class="kpi-header"><span>ساعة النظام NTP</span> ⏰</div>
-        <div class="kpi-value" id="rtc-time">00:00</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-header"><span>معدل الالتزام اليومي</span> 📈</div>
-        <div class="kpi-value" id="kpi-rate">0%</div>
-        <div class="adherence-bar-container"><div class="adherence-bar-fill" id="kpi-bar-fill"></div></div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-header"><span>الجرعة القادمة</span> ⌛</div>
-        <div class="kpi-value next-dose" id="next-dose-val">--:--</div>
-      </div>
-    </div>
-
-    <div class="quick-actions-grid">
-      <div class="action-btn-card" onclick="Api.triggerBuzzerTest()">
-        <div class="action-icon">🔊</div>
-        <div class="action-label">اختبار التنبيه</div>
-      </div>
-      <div class="action-btn-card" onclick="Api.syncHardwareTime()">
-        <div class="action-icon">🔄</div>
-        <div class="action-label">تزامن الوقت</div>
-      </div>
-      <div class="action-btn-card" onclick="App.switchPage('schedules', document.querySelectorAll('.nav-item')[2])">
-        <div class="action-icon">➕</div>
-        <div class="action-label">إضافة دواء</div>
-      </div>
-    </div>
-
-    <div class="section-title">💊 الخانات والأدوية اليومية</div>
-    <div class="boxes-grid" id="boxes-grid"></div>
-
-    <div class="custom-card">
-      <div class="chart-title">مخطط الالتزام الأسبوعي</div>
-      <canvas id="adherenceChart" height="120"></canvas>
-    </div>
-  </div>
-
-  <!-- ========== REPORTS ========== -->
-  <div class="page-tab" id="page-report">
-    <div id="patient-report-form">
-      <div class="custom-card">
-        <h3 class="card-title">📝 التقرير الطبي</h3>
-        <form onsubmit="App.submitWeeklyReport(event)">
-          <div class="form-group">
-            <label>كيف كان شعورك هذا الأسبوع؟</label>
-            <select id="report-health-status" class="form-control">
-              <option value="ممتاز 😃">ممتاز</option>
-              <option value="متوسط 😐">متوسط</option>
-              <option value="تعبان 😫">تعبان</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>هل هناك دواء بيتعبك؟</label>
-            <select id="report-problem-med" class="form-control">
-              <option value="لا يوجد">لا يوجد</option>
-              <option value="الخانة 1">دواء الخانة 1</option>
-              <option value="الخانة 2">دواء الخانة 2</option>
-              <option value="الخانة 3">دواء الخانة 3</option>
-              <option value="الخانة 4">دواء الخانة 4</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>الأعراض الجانبية</label>
-            <input type="text" id="report-symptoms" class="form-control" required>
-          </div>
-          <div class="form-group">
-            <label>ملاحظات إضافية</label>
-            <textarea id="report-notes" class="form-control" rows="3"></textarea>
-          </div>
-          <button type="submit" class="btn-action">إرسال التقرير 📤</button>
-        </form>
-      </div>
-      <div class="custom-card">
-        <h3 class="card-title-sm">📚 سجل التقارير</h3>
-        <div id="patient-report-history"></div>
-      </div>
-    </div>
-
-    <div id="doctor-report-review" style="display:none;">
-      <div class="custom-card">
-        <h3 class="card-title">🩺 مراجعة التقارير</h3>
-        <div id="reports-list-container"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ========== SCHEDULES ========== -->
-  <div class="page-tab" id="page-schedules">
-    <div class="page-title">⏰ إدارة الأدوية</div>
-
-    <div class="sched-overview-grid">
-      <div class="sched-overview-card">
-        <div class="sched-overview-num" id="sched-active-cnt">0/4</div>
-        <div class="sched-overview-lbl">خانات نشطة</div>
-      </div>
-      <div class="sched-overview-card">
-        <div class="sched-overview-num sm" id="sched-next-time">--:--</div>
-        <div class="sched-overview-lbl">الجرعة القادمة</div>
-      </div>
-      <div class="sched-overview-card">
-        <div class="sched-overview-num success">مفعّل</div>
-        <div class="sched-overview-lbl">التنبيه</div>
-      </div>
-      <div class="sched-overview-card">
-        <div class="sched-overview-num accent">NTP</div>
-        <div class="sched-overview-lbl">الساعة</div>
-      </div>
-    </div>
-
-    <div class="custom-card">
-      <h3 class="card-title-sm">📋 الجدول الحالي</h3>
-      <div id="schedule-slots-container"></div>
-    </div>
-
-    <div class="custom-card" id="schedule-form-card">
-      <h3 class="card-title-sm">⚙️ إضافة / تعديل جرعة</h3>
-      <form onsubmit="App.saveSchedule(event)">
-        <div class="form-row">
-          <div class="form-group">
-            <label>اختر الخانة</label>
-            <select class="form-control" id="sched-box" onchange="App.loadSelectedToForm()">
-              <option value="1">الخانة 01</option>
-              <option value="2">الخانة 02</option>
-              <option value="3">الخانة 03</option>
-              <option value="4">الخانة 04</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>عدد الأقراص</label>
-            <input type="number" id="sched-pills-count" class="form-control" min="1" max="5" value="1" required>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>اسم الدواء</label>
-          <input type="text" id="sched-name" class="form-control" required>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>توقيت التنبيه</label>
-            <input type="time" id="sched-time" class="form-control" required>
-          </div>
-          <div class="form-group">
-            <label>التكرار</label>
-            <select id="sched-repeat" class="form-control">
-              <option value="يومياً">يومياً</option>
-              <option value="أيام محددة">أيام محددة</option>
-              <option value="عند الحاجة">عند الحاجة</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-buttons-row">
-          <button type="submit" class="btn-action flex-2">حفظ وإرسال للعلبة 💾</button>
-          <button type="button" onclick="App.clearSelectedBox()" class="btn-action btn-danger-soft flex-1">تفريغ 🗑️</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- ========== NETWORK ========== -->
-  <div class="page-tab" id="page-network">
-    <div class="page-title">🌐 شبكة الرعاية</div>
-
-    <div class="net-stats">
-      <div class="net-stat-card">
-        <div class="net-stat-num" id="net-count-linked">0</div>
-        <div class="net-stat-label" id="net-label-linked">حسابات مرتبطة</div>
-      </div>
-      <div class="net-stat-card">
-        <div class="net-stat-num" id="net-count-pending">0</div>
-        <div class="net-stat-label">طلبات معلقة</div>
-      </div>
-      <div class="net-stat-card">
-        <div class="net-stat-num success">100%</div>
-        <div class="net-stat-label">أمان التزامن</div>
-      </div>
-    </div>
-
-    <div id="doctor-network-section" style="display:none;">
-      <div class="custom-card">
-        <h3 class="card-title-sm">➕ إضافة مريض</h3>
-        <form onsubmit="App.sendPatientRequest(event)" class="inline-form">
-          <input type="text" id="target-patient-username" class="form-control" placeholder="اسم المستخدم..." required>
-          <button type="submit" class="btn-action btn-inline">إرسال</button>
-        </form>
-      </div>
-      <div class="custom-card">
-        <h3 class="card-title-sm">👥 المرضى التابعون</h3>
-        <div id="doctor-patients-list"></div>
-      </div>
-    </div>
-
-    <div id="patient-network-section" style="display:none;">
-      <div class="custom-card">
-        <h3 class="card-title-sm">📩 طلبات الأطباء</h3>
-        <div id="patient-requests-list"></div>
-      </div>
-      <div class="custom-card">
-        <h3 class="card-title-sm">🩺 الأطباء المتابعون</h3>
-        <div id="patient-doctors-list"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ========== SETTINGS ========== -->
-  <div class="page-tab" id="page-settings">
-    <div class="page-title">⚙ إعدادات الحساب</div>
-
-    <div class="stg-profile-banner">
-      <div class="stg-avatar-large" id="stg-avatar-letter">U</div>
-      <div>
-        <h3 id="stg-display-name" class="stg-name">اسم المستخدم</h3>
-        <p id="stg-username-text" class="stg-username">@username</p>
-        <span class="stg-role-tag" id="stg-role-badge">حساب مريض</span>
-      </div>
-    </div>
-
-    <div class="custom-card">
-      <h3 class="card-section-title">🎨 التفضيلات</h3>
-      <div class="stg-item">
-        <div class="stg-info"><h4>الوضع الداكن</h4><p>المظهر الليلي</p></div>
-        <label class="switch">
-          <input type="checkbox" id="stg-theme-switch" checked onchange="App.toggleTheme()">
-          <span class="slider"></span>
+      <form id="form-login" data-form="login" autocomplete="on" novalidate>
+        <label class="fld"><span data-i18n="f_username"></span>
+          <input name="username" autocomplete="username" autocapitalize="off" spellcheck="false" required>
         </label>
-      </div>
-      <div class="stg-item">
-        <div class="stg-info"><h4>اللغة</h4><p>تغيير الواجهة</p></div>
-        <button class="ctrl-btn" onclick="App.toggleLanguage()">
-          <span id="stg-lang-text">العربية 🌐</span>
-        </button>
-      </div>
-    </div>
-
-    <div class="custom-card">
-      <h3 class="card-section-title">🔒 الأمان</h3>
-      <form onsubmit="App.changePassword(event)">
-        <div class="form-group">
-          <label>تحديث كلمة السر</label>
-          <input type="password" id="stg-new-pass" class="form-control" required>
-        </div>
-        <button type="submit" class="btn-action btn-sm">حفظ</button>
+        <label class="fld"><span data-i18n="f_password"></span>
+          <span class="pw-wrap"><input name="password" type="password" autocomplete="current-password" required>
+          <button type="button" class="pw-toggle" data-action="pw-toggle" data-i18n-title="show_pw">&#128065;</button></span>
+        </label>
+        <p class="form-err" id="login-err" role="alert"></p>
+        <button class="btn primary block" type="submit" data-i18n="btn_login"></button>
       </form>
-    </div>
 
-    <div class="custom-card danger-zone">
-      <h3 class="card-section-title danger">⚠️ إجراءات</h3>
-      <div class="form-buttons-row">
-        <button class="net-btn btn-danger-net flex-1 btn-pad" onclick="App.resetData()">إعادة ضبط البيانات</button>
-        <button class="net-btn btn-primary-net flex-1 btn-pad" onclick="App.logout()">تسجيل الخروج 🚪</button>
+      <form id="form-register" data-form="register" hidden novalidate>
+        <label class="fld"><span data-i18n="f_name"></span><input name="name" autocomplete="name" required></label>
+        <label class="fld"><span data-i18n="f_role"></span>
+          <select name="role"><option value="patient" data-i18n="role_patient"></option><option value="doctor" data-i18n="role_doctor"></option></select>
+        </label>
+        <label class="fld"><span data-i18n="f_username"></span>
+          <input name="username" autocomplete="username" autocapitalize="off" spellcheck="false" required>
+        </label>
+        <label class="fld"><span data-i18n="f_password"></span>
+          <span class="pw-wrap"><input name="password" type="password" autocomplete="new-password" data-input="pw-strength" required>
+          <button type="button" class="pw-toggle" data-action="pw-toggle" data-i18n-title="show_pw">&#128065;</button></span>
+          <small class="pw-hint" id="pw-hint"></small>
+        </label>
+        <p class="form-err" id="register-err" role="alert"></p>
+        <button class="btn primary block" type="submit" data-i18n="btn_register"></button>
+      </form>
+
+      <div class="demo" id="demo-box">
+        <small data-i18n="demo_title"></small>
+        <div class="demo-chips">
+          <button class="chip" type="button" data-action="demo" data-kind="pat1">pat1</button>
+          <button class="chip" type="button" data-action="demo" data-kind="doc1">doc1</button>
+        </div>
       </div>
     </div>
   </div>
+</section>
 
+<!-- ============ APP ============ -->
+<div id="app-view" hidden>
+  <header class="topbar">
+    <div class="brand"><span class="logo">NB</span><strong>Nura Box</strong></div>
+    <div class="topbar-right">
+      <span class="conn conn-local" id="conn-badge" title=""></span>
+      <button class="icon-btn" data-action="lang" type="button" data-i18n-title="lang"><span data-i18n="lang_name"></span></button>
+      <button class="icon-btn" data-action="theme" type="button" data-i18n-title="theme"><span class="theme-icon">&#9680;</span></button>
+      <button class="icon-btn" data-action="logout" type="button" data-i18n-title="logout">&#10162;</button>
+    </div>
+  </header>
+  <main class="shell">
+    <section class="page" id="page-home"></section>
+    <section class="page" id="page-schedule"></section>
+    <section class="page" id="page-network"></section>
+    <section class="page" id="page-reports"></section>
+    <section class="page" id="page-settings"></section>
+  </main>
+  <nav class="bottom-nav" aria-label="main">
+    <button data-action="nav" data-page="home" type="button"><i>&#8962;</i><span data-i18n="nav_home"></span></button>
+    <button data-action="nav" data-page="schedule" type="button"><i>&#9200;</i><span data-i18n="nav_schedule"></span></button>
+    <button data-action="nav" data-page="network" type="button"><i>&#9993;</i><span data-i18n="nav_network"></span><b class="nav-badge" id="nav-badge-network" hidden></b></button>
+    <button data-action="nav" data-page="reports" type="button"><i>&#9776;</i><span data-i18n="nav_reports"></span></button>
+    <button data-action="nav" data-page="settings" type="button"><i>&#9881;</i><span data-i18n="nav_settings"></span></button>
+  </nav>
 </div>
-
-<!-- ==================== BOTTOM NAV ==================== -->
-<div class="bottom-nav" id="app-bottom-nav" style="display:none;">
-  <button class="nav-item active" onclick="App.switchPage('dashboard', this)">
-    <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>الرئيسية</span>
-  </button>
-  <button class="nav-item" onclick="App.switchPage('report', this)">
-    <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg><span>التقرير</span>
-  </button>
-  <button class="nav-item" onclick="App.switchPage('schedules', this)">
-    <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg><span>المواعيد</span>
-  </button>
-  <button class="nav-item" onclick="App.switchPage('network', this)">
-    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg><span>الربط الطبي</span>
-  </button>
-  <button class="nav-item" onclick="App.switchPage('settings', this)">
-    <svg viewBox="0 0 24 24"><path d="M12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6-3.6z"/></svg><span>الإعدادات</span>
-  </button>
-</div>
-
-<!-- ==================== SCRIPTS ==================== -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-<script src="api.js"></script>
-<script src="app.js"></script>
 </body>
 </html>
