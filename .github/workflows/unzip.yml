@@ -1,0 +1,46 @@
+# .github/workflows/unzip.yml
+# Manual only. Extracts NuraBox.zip (repo root) into a NEW branch.
+# Deletes nothing: it copies files over, never removes existing ones. Never touches main.
+name: Unzip NuraBox
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  unzip:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract NuraBox.zip
+        run: |
+          set -e
+          if [ ! -f NuraBox.zip ]; then
+            echo "NuraBox.zip is not in the repo root. Upload it first."
+            exit 1
+          fi
+          rm -rf "$RUNNER_TEMP/nb"
+          mkdir -p "$RUNNER_TEMP/nb"
+          unzip -q NuraBox.zip -d "$RUNNER_TEMP/nb"
+          # the zip has a top-level NuraBox/ folder: copy its CONTENTS to the repo root
+          cp -r "$RUNNER_TEMP/nb/NuraBox/." .
+
+      - name: Commit to a new branch
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          BR="unzip-$(date +%Y%m%d-%H%M%S)"
+          git checkout -b "$BR"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Nothing changed."
+            exit 0
+          fi
+          git commit -m "Extract NuraBox.zip into repo"
+          git push origin "$BR"
+          echo "Pushed branch: $BR  -> open a Pull Request from it"
